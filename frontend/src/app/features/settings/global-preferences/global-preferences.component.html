@@ -190,6 +190,44 @@
             </div>
           </div>
         </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label-row">
+              <span class="setting-label">{{ t('fileManagement.autoConvert') }}</span>
+              <p-toggleswitch
+                [(ngModel)]="toggles.autoConvertEnabled"
+                (onChange)="onToggleChange('autoConvertEnabled', $event.checked)">
+              </p-toggleswitch>
+            </div>
+            <p class="setting-description">
+              <i class="pi pi-info-circle"></i>
+              {{ t('fileManagement.autoConvertDesc') }}
+            </p>
+          </div>
+        </div>
+
+        @if (toggles.autoConvertEnabled) {
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label-row">
+                <span class="setting-label">{{ t('fileManagement.autoConvertFormats') }}</span>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    pInputText
+                    [(ngModel)]="autoConvertFormats"
+                    [placeholder]="t('fileManagement.autoConvertFormatsPlaceholder')"/>
+                  <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveAutoConvertFormats()"></p-button>
+                </div>
+              </div>
+              <p class="setting-description">
+                <i class="pi pi-info-circle"></i>
+                {{ t('fileManagement.autoConvertFormatsDesc') }}
+              </p>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>

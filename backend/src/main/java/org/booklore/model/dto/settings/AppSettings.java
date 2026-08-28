@@ -23,6 +23,8 @@ public class AppSettings {
     private String uploadPattern;
     private Integer pdfCacheSizeInMb;
     private Integer maxFileUploadSizeInMb;
+    private boolean autoConvertEnabled;
+    private String autoConvertFormats;
     private boolean remoteAuthEnabled;
     private boolean metadataDownloadOnBookdrop;
     private boolean oidcEnabled;

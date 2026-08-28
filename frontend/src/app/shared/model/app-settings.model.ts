@@ -188,6 +188,8 @@ export interface AppSettings {
   oidcRedirectUris: string[];
   oidcAutoProvisionDetails: OidcAutoProvisionDetails;
   maxFileUploadSizeInMb: number;
+  autoConvertEnabled: boolean;
+  autoConvertFormats: string;
   metadataProviderSettings: MetadataProviderSettings;
   metadataMatchWeights: MetadataMatchWeights;
   metadataPersistenceSettings: MetadataPersistenceSettings;
@@ -238,6 +240,8 @@ export enum AppSettingKey {
   OIDC_REDIRECT_URIS = 'OIDC_REDIRECT_URIS',
   OIDC_AUTO_PROVISION_DETAILS = 'OIDC_AUTO_PROVISION_DETAILS',
   MAX_FILE_UPLOAD_SIZE_IN_MB = 'MAX_FILE_UPLOAD_SIZE_IN_MB',
+  AUTO_CONVERT_ENABLED = 'AUTO_CONVERT_ENABLED',
+  AUTO_CONVERT_FORMATS = 'AUTO_CONVERT_FORMATS',
   METADATA_PROVIDER_SETTINGS = 'METADATA_PROVIDER_SETTINGS',
   METADATA_MATCH_WEIGHTS = 'METADATA_MATCH_WEIGHTS',
   METADATA_PERSISTENCE_SETTINGS = 'METADATA_PERSISTENCE_SETTINGS',

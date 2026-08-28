@@ -33,7 +33,14 @@
     "maxUploadDesc": "Defines the maximum allowed size (in MB) for each uploaded file. Applies to all supported file formats.",
     "restartWarning": "Changes will take effect after restarting the server",
     "invalidInput": "Invalid Input",
-    "invalidInputDetail": "Please enter a valid max file upload size in MB."
+    "invalidInputDetail": "Please enter a valid max file upload size in MB.",
+    "autoConvert": "Auto Conversion",
+    "autoConvertDesc": "Automatically convert newly added books into the wanted formats below. Formats a book already has are skipped.",
+    "autoConvertFormats": "Wanted Formats",
+    "autoConvertFormatsPlaceholder": "epub, azw3",
+    "autoConvertFormatsDesc": "Comma separated list of formats to create for each new book if missing. Supported: epub, mobi, azw3, fb2, pdf.",
+    "autoConvertFormatsInvalidDetail": "Please enter at least one format, separated by commas.",
+    "autoConvertFormatsUnsupported": "Unsupported format: {{value}}. Supported formats are epub, mobi, azw3, fb2 and pdf."
   },
   "settingsSaved": "Settings Saved",
   "settingsSavedDetail": "The settings were successfully saved!",
