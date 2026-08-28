@@ -34,6 +34,7 @@ export class GlobalPreferencesComponent implements OnInit {
   toggles = {
     autoBookSearch: false,
     similarBookRecommendation: false,
+    autoConvertEnabled: false,
   };
 
   coverCroppingSettings: CoverCroppingSettings = {
@@ -63,9 +64,15 @@ export class GlobalPreferencesComponent implements OnInit {
     }
     this.toggles.autoBookSearch = settings.autoBookSearch ?? false;
     this.toggles.similarBookRecommendation = settings.similarBookRecommendation ?? false;
+    this.toggles.autoConvertEnabled = settings.autoConvertEnabled ?? false;
+    if (!this.autoConvertFormatsTouched) {
+      this.autoConvertFormats = settings.autoConvertFormats ?? '';
+    }
   });
 
   maxFileUploadSizeInMb?: number;
+  autoConvertFormats = '';
+  autoConvertFormatsTouched = false;
   regenerateCoverMenuItems: MenuItem[] = [];
 
   ngOnInit(): void {
@@ -83,6 +90,7 @@ export class GlobalPreferencesComponent implements OnInit {
     const toggleKeyMap: Record<string, AppSettingKey> = {
       autoBookSearch: AppSettingKey.AUTO_BOOK_SEARCH,
       similarBookRecommendation: AppSettingKey.SIMILAR_BOOK_RECOMMENDATION,
+      autoConvertEnabled: AppSettingKey.AUTO_CONVERT_ENABLED,
     };
     const keyToSend = toggleKeyMap[settingKey];
     if (keyToSend) {
@@ -102,6 +110,24 @@ export class GlobalPreferencesComponent implements OnInit {
       return;
     }
     this.saveSetting(AppSettingKey.MAX_FILE_UPLOAD_SIZE_IN_MB, this.maxFileUploadSizeInMb);
+  }
+
+  saveAutoConvertFormats() {
+    const supportedFormats = ['epub', 'mobi', 'azw3', 'fb2', 'pdf'];
+    const formats = (this.autoConvertFormats ?? '')
+      .split(',')
+      .map(format => format.trim().toLowerCase())
+      .filter(format => format.length > 0);
+
+    const unsupported = formats.find(format => !supportedFormats.includes(format));
+    if (unsupported) {
+      this.showMessage('error', this.t.translate('settingsApp.conversion.invalidInput'), this.t.translate('settingsApp.conversion.autoConvertFormatsUnsupported', {value: unsupported}));
+      return;
+    }
+
+    this.autoConvertFormats = [...new Set(formats)].join(', ');
+    this.autoConvertFormatsTouched = false;
+    this.saveSetting(AppSettingKey.AUTO_CONVERT_FORMATS, this.autoConvertFormats);
   }
 
   regenerateCovers(missingOnly = false): void {

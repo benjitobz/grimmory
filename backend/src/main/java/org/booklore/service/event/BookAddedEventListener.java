@@ -3,6 +3,7 @@ package org.booklore.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.booklore.model.dto.Book;
+import org.booklore.service.conversion.EbookConversionService;
 import org.booklore.service.kobo.KoboAutoShelfService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class BookAddedEventListener {
 
     private final BookEventBroadcaster bookEventBroadcaster;
     private final KoboAutoShelfService koboAutoShelfService;
+    private final EbookConversionService ebookConversionService;
 
     @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
@@ -33,6 +35,12 @@ public class BookAddedEventListener {
             log.debug("Book {} notifications and Kobo shelf updates completed", book.getId());
         } catch (Exception e) {
             log.error("Failed to process book added event for book ID {}: {}", book.getId(), e.getMessage(), e);
+        }
+
+        try {
+            ebookConversionService.convertMissingFormats(book.getId());
+        } catch (Exception e) {
+            log.error("Failed to auto-convert formats for book ID {}: {}", book.getId(), e.getMessage(), e);
         }
     }
 }

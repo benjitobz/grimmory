@@ -80,6 +80,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Long>, JpaSpec
     @Query("SELECT b.id FROM BookEntity b WHERE b.libraryPath.id IN :libraryPathIds AND (b.deleted IS NULL OR b.deleted = false)")
     List<Long> findAllBookIdsByLibraryPathIdIn(@Param("libraryPathIds") Collection<Long> libraryPathIds);
 
+    @Query("SELECT b.id FROM BookEntity b WHERE b.deleted IS NULL OR b.deleted = false")
+    List<Long> findAllActiveBookIds();
+
     // Only ToOne paths in EntityGraph; collections (authors, categories, moods, tags, shelves, bookFiles) loaded via @BatchSize.
     @EntityGraph(attributePaths = {"metadata", "metadata.comicMetadata", "library"})
     @Query("SELECT b FROM BookEntity b WHERE (b.deleted IS NULL OR b.deleted = false)")

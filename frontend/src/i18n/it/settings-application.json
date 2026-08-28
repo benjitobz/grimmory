@@ -37,5 +37,15 @@
     },
     "settingsSaved": "Impostazioni salvate",
     "settingsSavedDetail": "Le impostazioni sono state salvate con successo!",
-    "settingsError": "Si è verificato un errore durante il salvataggio delle impostazioni."
+    "settingsError": "Si è verificato un errore durante il salvataggio delle impostazioni.",
+    "conversion": {
+        "sectionTitle": "File Conversion",
+        "invalidInput": "Invalid Input",
+        "autoConvert": "Auto Conversion",
+        "autoConvertDesc": "Automatically convert newly added books into the wanted formats below. Formats a book already has are skipped.",
+        "autoConvertFormats": "Wanted Formats",
+        "autoConvertFormatsPlaceholder": "epub, azw3",
+        "autoConvertFormatsDesc": "Comma separated list of formats to create for each new book if missing. Supported: epub, mobi, azw3, fb2, pdf.",
+        "autoConvertFormatsUnsupported": "Unsupported format: {{value}}. Supported formats are epub, mobi, azw3, fb2 and pdf."
+    }
 }

@@ -11,6 +11,7 @@ import org.booklore.model.entity.AppSettingEntity;
 import org.booklore.model.enums.AuditAction;
 import org.booklore.model.enums.PermissionType;
 import org.booklore.service.audit.AuditService;
+import org.booklore.service.conversion.EbookConversionService;
 import org.booklore.util.UserPermissionUtils;
 import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
 import org.springframework.cache.annotation.CacheEvict;
@@ -70,6 +71,10 @@ public class AppSettingService {
             validateOidcForceOnlyMode(val);
         }
 
+        if (key == AppSettingKey.AUTO_CONVERT_FORMATS) {
+            val = validateAndNormalizeAutoConvertFormats(val);
+        }
+
         var setting = settingPersistenceHelper.appSettingsRepository.findByName(key.toString());
         if (setting == null) {
             setting = new AppSettingEntity();
@@ -84,6 +89,16 @@ public class AppSettingService {
             default -> AuditAction.SETTINGS_UPDATED;
         };
         auditService.log(action, "Updated setting: " + key);
+    }
+
+    private String validateAndNormalizeAutoConvertFormats(Object val) {
+        List<String> formats = EbookConversionService.parseWantedFormats(val == null ? null : String.valueOf(val));
+        for (String format : formats) {
+            if (!EbookConversionService.SUPPORTED_TARGET_FORMATS.containsKey(format)) {
+                throw ApiError.GENERIC_BAD_REQUEST.createException("Unsupported conversion format: " + format);
+            }
+        }
+        return String.join(", ", formats);
     }
 
     private void validateOidcForceOnlyMode(Object val) {
@@ -254,6 +269,8 @@ public class AppSettingService {
         builder.komgaGroupUnknown(Boolean.parseBoolean(settingPersistenceHelper.getOrCreateSetting(AppSettingKey.KOMGA_GROUP_UNKNOWN, "true")));
         builder.pdfCacheSizeInMb(Integer.parseInt(settingPersistenceHelper.getOrCreateSetting(AppSettingKey.PDF_CACHE_SIZE_IN_MB, "5120")));
         builder.maxFileUploadSizeInMb(Integer.parseInt(settingPersistenceHelper.getOrCreateSetting(AppSettingKey.MAX_FILE_UPLOAD_SIZE_IN_MB, "100")));
+        builder.autoConvertEnabled(Boolean.parseBoolean(settingPersistenceHelper.getOrCreateSetting(AppSettingKey.AUTO_CONVERT_ENABLED, "false")));
+        builder.autoConvertFormats(settingPersistenceHelper.getOrCreateSetting(AppSettingKey.AUTO_CONVERT_FORMATS, ""));
         builder.metadataDownloadOnBookdrop(Boolean.parseBoolean(settingPersistenceHelper.getOrCreateSetting(AppSettingKey.METADATA_DOWNLOAD_ON_BOOKDROP, "true")));
 
         String sessionDurationStr = settingsMap.get(AppSettingKey.OIDC_SESSION_DURATION_HOURS.getDbKey());

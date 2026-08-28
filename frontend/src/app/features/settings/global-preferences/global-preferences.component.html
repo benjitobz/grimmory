@@ -192,6 +192,56 @@
         </div>
       </div>
     </div>
+
+    <div class="preferences-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="pi pi-file-export"></i>
+          {{ t('conversion.sectionTitle') }}
+        </h3>
+      </div>
+
+      <div class="settings-card">
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label-row">
+              <span class="setting-label">{{ t('conversion.autoConvert') }}</span>
+              <p-toggleswitch
+                [(ngModel)]="toggles.autoConvertEnabled"
+                (onChange)="onToggleChange('autoConvertEnabled', $event.checked)">
+              </p-toggleswitch>
+            </div>
+            <p class="setting-description">
+              <i class="pi pi-info-circle"></i>
+              {{ t('conversion.autoConvertDesc') }}
+            </p>
+          </div>
+        </div>
+
+        @if (toggles.autoConvertEnabled) {
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label-row">
+                <span class="setting-label">{{ t('conversion.autoConvertFormats') }}</span>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    pInputText
+                    [(ngModel)]="autoConvertFormats"
+                    (ngModelChange)="autoConvertFormatsTouched = true"
+                    [placeholder]="t('conversion.autoConvertFormatsPlaceholder')"/>
+                  <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveAutoConvertFormats()"></p-button>
+                </div>
+              </div>
+              <p class="setting-description">
+                <i class="pi pi-info-circle"></i>
+                {{ t('conversion.autoConvertFormatsDesc') }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
   </div>
 </div>
 </ng-container>

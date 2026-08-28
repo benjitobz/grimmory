@@ -15,7 +15,7 @@ fi
 
 # Create group and user if they don't exist
 if ! getent group "$GROUP_ID" >/dev/null 2>&1; then
-    addgroup -g "$GROUP_ID" -S "$APP_USER"
+    groupadd -g "$GROUP_ID" "$APP_USER"
 fi
 
 if getent passwd "$APP_USER" >/dev/null 2>&1; then
@@ -27,11 +27,11 @@ if getent passwd "$APP_USER" >/dev/null 2>&1; then
 fi
 
 if ! getent passwd "$USER_ID" >/dev/null 2>&1; then
-    adduser -u "$USER_ID" -G "$(getent group "$GROUP_ID" | cut -d: -f1)" -S -D "$APP_USER"
+    useradd -u "$USER_ID" -g "$GROUP_ID" -M -s /usr/sbin/nologin "$APP_USER"
 fi
 
 # Ensure data, bookdrop, and books directories exist and are writable by the target user
 mkdir -p /app/data /bookdrop /books
 chown "$USER_ID:$GROUP_ID" /app/data /bookdrop /books 2>/dev/null || true
 
-exec su-exec "$USER_ID:$GROUP_ID" "$@"
+exec gosu "$USER_ID:$GROUP_ID" "$@"

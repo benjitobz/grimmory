@@ -51,6 +51,14 @@ public enum TaskType {
             "Cleanup Temporary Metadata",
             "Removes temporary metadata files created during the bookdrop and manual metadata review processes."
     ),
+    AUTO_CONVERT_MISSING_FORMATS(
+            false,
+            true,
+            true,
+            false,
+            "Convert Missing Formats",
+            "Converts library books into the wanted formats configured under File Conversion, skipping formats a book already has."
+    ),
     REFRESH_METADATA_MANUAL(
             false,
             true,
