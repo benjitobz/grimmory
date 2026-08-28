@@ -50,9 +50,9 @@ public class GoodReadsParser implements BookParser, DetailedMetadataProvider {
     private static final String API_KEY_SCRAPE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0 Safari/537.36";
     private static final long API_KEY_REFRESH_THROTTLE_MS = 10 * 60 * 1000L;
 
-    private volatile String graphqlApiKey = DEFAULT_API_KEY;
-    private volatile long lastApiKeyRefreshAttempt;
-    private final Object apiKeyRefreshLock = new Object();
+    private static volatile String graphqlApiKey = DEFAULT_API_KEY;
+    private static volatile long lastApiKeyRefreshAttempt;
+    private static final Object API_KEY_REFRESH_LOCK = new Object();
     private static final String GRAPHQL_QUERY = """
             query getBookPageData($legacyBookId: Int!) {
                 getBookByLegacyId(legacyId: $legacyBookId) {
@@ -274,7 +274,7 @@ public class GoodReadsParser implements BookParser, DetailedMetadataProvider {
 
     private boolean refreshGraphqlApiKey() {
         String keyBeforeRefresh = graphqlApiKey;
-        synchronized (apiKeyRefreshLock) {
+        synchronized (API_KEY_REFRESH_LOCK) {
             if (!graphqlApiKey.equals(keyBeforeRefresh)) {
                 return true;
             }
