@@ -112,6 +112,7 @@ public class AutoConvertMissingFormatsTask implements Task {
                     .taskStatus(taskStatus)
                     .build();
             notificationService.sendMessage(Topic.TASK_PROGRESS, payload);
+            log.info("{}: sent progress {}% ({}) for taskId={}", getTaskType(), progress, taskStatus, taskId);
         } catch (Exception e) {
             log.error("Failed to send task progress notification for taskId={}: {}", taskId, e.getMessage(), e);
         }
