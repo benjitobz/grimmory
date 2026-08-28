@@ -163,7 +163,7 @@ public class BookDeletionService {
                 .toList();
 
         if (!remainingBookFiles.isEmpty()) {
-            if (!deletedBookFiles.isEmpty() && remainingBookFiles.stream().allMatch(BookDeletionService::isAutoConvertedFile)) {
+            if (remainingBookFiles.stream().allMatch(BookDeletionService::isAutoConvertedFile)) {
                 deleteLeftoverAutoConvertedFiles(book, remainingBookFiles);
                 return false;
             }
