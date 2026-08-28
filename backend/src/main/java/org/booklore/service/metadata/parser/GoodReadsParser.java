@@ -41,9 +41,18 @@ import java.util.regex.Pattern;
 public class GoodReadsParser implements BookParser, DetailedMetadataProvider {
     private static final TypeReference<List<GoodreadsAutocompleteEntry>> AUTOCOMPLETE_RESPONSE_TYPE = new TypeReference<>() {};
 
-    // Located in Goodreads _app JS chunk, visible in DevTools → Network → GraphQL requests
+    // Located in Goodreads _app JS chunk, visible in DevTools → Network → GraphQL requests.
+    // Goodreads rotates this key; on 401 the parser re-scrapes the current key from the public site.
     private static final String GRAPHQL_ENDPOINT = "https://kxbwmqov6jgg3daaamb744ycu4.appsync-api.us-east-1.amazonaws.com/graphql";
-    private static final String API_KEY = "da2-d2fyuybwsbf3poyquvbp2mbiwu";
+    private static final String DEFAULT_API_KEY = "da2-d2fyuybwsbf3poyquvbp2mbiwu";
+    private static final String API_KEY_SOURCE_URL = "https://www.goodreads.com/book/show/1";
+    private static final Pattern API_KEY_PATTERN = Pattern.compile("da2-[a-z0-9]{26}");
+    private static final String API_KEY_SCRAPE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0 Safari/537.36";
+    private static final long API_KEY_REFRESH_THROTTLE_MS = 10 * 60 * 1000L;
+
+    private volatile String graphqlApiKey = DEFAULT_API_KEY;
+    private volatile long lastApiKeyRefreshAttempt;
+    private final Object apiKeyRefreshLock = new Object();
     private static final String GRAPHQL_QUERY = """
             query getBookPageData($legacyBookId: Int!) {
                 getBookByLegacyId(legacyId: $legacyBookId) {
@@ -219,14 +228,10 @@ public class GoodReadsParser implements BookParser, DetailedMetadataProvider {
                     .put("query", GRAPHQL_QUERY);
             String requestBody = payload.toString();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(GRAPHQL_ENDPOINT))
-                    .header("x-api-key", API_KEY)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = sendGraphqlRequest(requestBody);
+            if (response.statusCode() == 401 && refreshGraphqlApiKey()) {
+                response = sendGraphqlRequest(requestBody);
+            }
             if (response.statusCode() < 200 || response.statusCode() > 399) {
                 String errorBody = response.body();
                 log.error("GraphQL request failed with status: {}, body: {}", response.statusCode(),
@@ -254,6 +259,65 @@ public class GoodReadsParser implements BookParser, DetailedMetadataProvider {
         } catch (Exception e) {
             log.error("GraphQL request failed for ID: {}", goodreadsId, e);
             return null;
+        }
+    }
+
+    private HttpResponse<String> sendGraphqlRequest(String requestBody) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(GRAPHQL_ENDPOINT))
+                .header("x-api-key", graphqlApiKey)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private boolean refreshGraphqlApiKey() {
+        String keyBeforeRefresh = graphqlApiKey;
+        synchronized (apiKeyRefreshLock) {
+            if (!graphqlApiKey.equals(keyBeforeRefresh)) {
+                return true;
+            }
+            long now = System.currentTimeMillis();
+            if (now - lastApiKeyRefreshAttempt < API_KEY_REFRESH_THROTTLE_MS) {
+                return false;
+            }
+            lastApiKeyRefreshAttempt = now;
+
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(API_KEY_SOURCE_URL))
+                        .header("User-Agent", API_KEY_SCRAPE_USER_AGENT)
+                        .GET()
+                        .build();
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() < 200 || response.statusCode() > 399 || response.body() == null) {
+                    log.warn("GoodReads: failed to re-scrape GraphQL API key, page returned status {}", response.statusCode());
+                    return false;
+                }
+
+                var matcher = API_KEY_PATTERN.matcher(response.body());
+                if (!matcher.find()) {
+                    log.warn("GoodReads: no GraphQL API key found on {}", API_KEY_SOURCE_URL);
+                    return false;
+                }
+
+                String scrapedKey = matcher.group();
+                if (scrapedKey.equals(graphqlApiKey)) {
+                    log.warn("GoodReads: scraped GraphQL API key matches the rejected key, cannot self-heal");
+                    return false;
+                }
+
+                graphqlApiKey = scrapedKey;
+                log.info("GoodReads: GraphQL API key was rotated, self-healed with freshly scraped key");
+                return true;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            } catch (Exception e) {
+                log.warn("GoodReads: failed to re-scrape GraphQL API key: {}", e.getMessage());
+                return false;
+            }
         }
     }
 
