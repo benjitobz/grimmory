@@ -34,6 +34,9 @@ export function initializeAuthFactory() {
             },
             error: err => {
               console.error('[Remote Login] failed:', err);
+              if (authService.getInternalAccessToken()) {
+                websocketInitializer(authService)();
+              }
               authInitService.markAsInitialized();
               resolve();
             }
