@@ -158,15 +158,59 @@ public class BookDeletionService {
             bookAdditionalFileRepository.delete(bf);
         });
 
-        boolean hasRemainingBookFiles = book.getBookFiles().stream()
-                .anyMatch(BookFileEntity::isBook);
+        List<BookFileEntity> remainingBookFiles = book.getBookFiles().stream()
+                .filter(BookFileEntity::isBook)
+                .toList();
 
-        if (hasRemainingBookFiles) {
+        if (!remainingBookFiles.isEmpty()) {
+            if (!deletedBookFiles.isEmpty() && remainingBookFiles.stream().allMatch(BookDeletionService::isAutoConvertedFile)) {
+                deleteLeftoverAutoConvertedFiles(book, remainingBookFiles);
+                return false;
+            }
+
             bookRepository.save(book);
             log.info("Removed {} deleted book file(s) for book ID {}", deletedBookFiles.size(), book.getId());
             return true;
         }
         return false;
+    }
+
+    private void deleteLeftoverAutoConvertedFiles(BookEntity book, List<BookFileEntity> autoConvertedFiles) {
+        for (BookFileEntity bookFile : autoConvertedFiles) {
+            Path filePath = bookFile.getFullFilePath();
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                log.warn("Failed to delete leftover auto-converted file {}: {}", filePath, e.getMessage());
+            }
+            book.getBookFiles().remove(bookFile);
+            bookAdditionalFileRepository.delete(bookFile);
+        }
+
+        Path bookFolder = autoConvertedFiles.getFirst().getFullFilePath().getParent();
+        deleteFolderIfEmpty(bookFolder);
+        if (bookFolder != null) {
+            deleteFolderIfEmpty(bookFolder.getParent());
+        }
+
+        log.info("Removed {} leftover auto-converted file(s) for book ID {} after its source files were deleted", autoConvertedFiles.size(), book.getId());
+    }
+
+    private void deleteFolderIfEmpty(Path folder) {
+        if (folder == null) {
+            return;
+        }
+        try (Stream<Path> entries = Files.exists(folder) ? Files.list(folder) : Stream.empty()) {
+            if (entries.findAny().isEmpty()) {
+                Files.deleteIfExists(folder);
+            }
+        } catch (IOException e) {
+            log.debug("Could not remove empty folder {}: {}", folder, e.getMessage());
+        }
+    }
+
+    private static boolean isAutoConvertedFile(BookFileEntity bookFile) {
+        return bookFile.getDescription() != null && bookFile.getDescription().startsWith("Auto-converted from");
     }
 
 
