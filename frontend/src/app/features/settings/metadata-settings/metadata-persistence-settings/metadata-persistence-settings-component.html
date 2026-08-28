@@ -72,6 +72,102 @@
       <div class="setting-item">
         <div class="setting-header">
           <p-toggleswitch
+            [formControl]="form.controls.saveToOriginalFile.controls.mobi.controls.enabled"
+            (onChange)="onSaveToOriginalFileToggle('mobi', $event.checked)">
+          </p-toggleswitch>
+          <span class="setting-label">{{ t('writeMobi') }}</span>
+        </div>
+        <p class="setting-description">{{ t('writeMobiDesc') }}</p>
+        @if (form.controls.saveToOriginalFile.controls.mobi.controls.enabled.value) {
+          <div class="setting-options">
+            <div class="filesize-input">
+              <label for="metadata-persistence-mobi-max-file-size">{{ t('maxFileSize') }}</label>
+              <input
+                id="metadata-persistence-mobi-max-file-size"
+                type="number"
+                [formControl]="form.controls.saveToOriginalFile.controls.mobi.controls.maxFileSizeInMb"
+                (change)="onFilesizeChange('mobi')"
+                min="1"
+                max="1000"
+                class="filesize-field">
+              <span class="filesize-unit">MB</span>
+              <i
+                class="pi pi-info-circle"
+                [pTooltip]="t('maxFileSizeTooltip')"
+                tooltipPosition="right">
+              </i>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-header">
+          <p-toggleswitch
+            [formControl]="form.controls.saveToOriginalFile.controls.azw3.controls.enabled"
+            (onChange)="onSaveToOriginalFileToggle('azw3', $event.checked)">
+          </p-toggleswitch>
+          <span class="setting-label">{{ t('writeAzw3') }}</span>
+        </div>
+        <p class="setting-description">{{ t('writeAzw3Desc') }}</p>
+        @if (form.controls.saveToOriginalFile.controls.azw3.controls.enabled.value) {
+          <div class="setting-options">
+            <div class="filesize-input">
+              <label for="metadata-persistence-azw3-max-file-size">{{ t('maxFileSize') }}</label>
+              <input
+                id="metadata-persistence-azw3-max-file-size"
+                type="number"
+                [formControl]="form.controls.saveToOriginalFile.controls.azw3.controls.maxFileSizeInMb"
+                (change)="onFilesizeChange('azw3')"
+                min="1"
+                max="1000"
+                class="filesize-field">
+              <span class="filesize-unit">MB</span>
+              <i
+                class="pi pi-info-circle"
+                [pTooltip]="t('maxFileSizeTooltip')"
+                tooltipPosition="right">
+              </i>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-header">
+          <p-toggleswitch
+            [formControl]="form.controls.saveToOriginalFile.controls.fb2.controls.enabled"
+            (onChange)="onSaveToOriginalFileToggle('fb2', $event.checked)">
+          </p-toggleswitch>
+          <span class="setting-label">{{ t('writeFb2') }}</span>
+        </div>
+        <p class="setting-description">{{ t('writeFb2Desc') }}</p>
+        @if (form.controls.saveToOriginalFile.controls.fb2.controls.enabled.value) {
+          <div class="setting-options">
+            <div class="filesize-input">
+              <label for="metadata-persistence-fb2-max-file-size">{{ t('maxFileSize') }}</label>
+              <input
+                id="metadata-persistence-fb2-max-file-size"
+                type="number"
+                [formControl]="form.controls.saveToOriginalFile.controls.fb2.controls.maxFileSizeInMb"
+                (change)="onFilesizeChange('fb2')"
+                min="1"
+                max="1000"
+                class="filesize-field">
+              <span class="filesize-unit">MB</span>
+              <i
+                class="pi pi-info-circle"
+                [pTooltip]="t('maxFileSizeTooltip')"
+                tooltipPosition="right">
+              </i>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-header">
+          <p-toggleswitch
             [formControl]="form.controls.saveToOriginalFile.controls.cbx.controls.enabled"
             (onChange)="onSaveToOriginalFileToggle('cbx', $event.checked)">
           </p-toggleswitch>

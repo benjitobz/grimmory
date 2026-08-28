@@ -117,6 +117,9 @@ export interface SaveToOriginalFileSettings {
   pdf: FormatWriteSettings;
   cbx: FormatWriteSettings;
   audiobook: FormatWriteSettings;
+  mobi: FormatWriteSettings;
+  azw3: FormatWriteSettings;
+  fb2: FormatWriteSettings;
 }
 
 export interface SidecarSettings {

@@ -27,12 +27,18 @@ public class MetadataPersistenceSettings {
         private FormatSettings pdf;
         private FormatSettings cbx;
         private FormatSettings audiobook;
+        private FormatSettings mobi;
+        private FormatSettings azw3;
+        private FormatSettings fb2;
 
         public boolean isAnyFormatEnabled() {
             return (epub != null && epub.isEnabled())
                     || (pdf != null && pdf.isEnabled())
                     || (cbx != null && cbx.isEnabled())
-                    || (audiobook != null && audiobook.isEnabled());
+                    || (audiobook != null && audiobook.isEnabled())
+                    || (mobi != null && mobi.isEnabled())
+                    || (azw3 != null && azw3.isEnabled())
+                    || (fb2 != null && fb2.isEnabled());
         }
     }
 

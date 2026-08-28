@@ -271,11 +271,29 @@ public class SettingPersistenceHelper {
                 .maxFileSizeInMb(250)
                 .build();
 
+        MetadataPersistenceSettings.FormatSettings mobiSettings = MetadataPersistenceSettings.FormatSettings.builder()
+                .enabled(false)
+                .maxFileSizeInMb(250)
+                .build();
+
+        MetadataPersistenceSettings.FormatSettings azw3Settings = MetadataPersistenceSettings.FormatSettings.builder()
+                .enabled(false)
+                .maxFileSizeInMb(250)
+                .build();
+
+        MetadataPersistenceSettings.FormatSettings fb2Settings = MetadataPersistenceSettings.FormatSettings.builder()
+                .enabled(false)
+                .maxFileSizeInMb(250)
+                .build();
+
         MetadataPersistenceSettings.SaveToOriginalFile saveToOriginalFile = MetadataPersistenceSettings.SaveToOriginalFile.builder()
                 .epub(epubSettings)
                 .pdf(pdfSettings)
                 .cbx(cbxSettings)
                 .audiobook(audiobookSettings)
+                .mobi(mobiSettings)
+                .azw3(azw3Settings)
+                .fb2(fb2Settings)
                 .build();
 
         return MetadataPersistenceSettings.builder()
