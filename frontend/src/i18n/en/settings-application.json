@@ -33,7 +33,11 @@
     "maxUploadDesc": "Defines the maximum allowed size (in MB) for each uploaded file. Applies to all supported file formats.",
     "restartWarning": "Changes will take effect after restarting the server",
     "invalidInput": "Invalid Input",
-    "invalidInputDetail": "Please enter a valid max file upload size in MB.",
+    "invalidInputDetail": "Please enter a valid max file upload size in MB."
+  },
+  "conversion": {
+    "sectionTitle": "File Conversion",
+    "invalidInput": "Invalid Input",
     "autoConvert": "Auto Conversion",
     "autoConvertDesc": "Automatically convert newly added books into the wanted formats below. Formats a book already has are skipped.",
     "autoConvertFormats": "Wanted Formats",

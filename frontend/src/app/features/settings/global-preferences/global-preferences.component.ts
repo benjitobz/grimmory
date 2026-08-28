@@ -117,13 +117,13 @@ export class GlobalPreferencesComponent implements OnInit {
       .filter(format => format.length > 0);
 
     if (formats.length === 0) {
-      this.showMessage('error', this.t.translate('settingsApp.fileManagement.invalidInput'), this.t.translate('settingsApp.fileManagement.autoConvertFormatsInvalidDetail'));
+      this.showMessage('error', this.t.translate('settingsApp.conversion.invalidInput'), this.t.translate('settingsApp.conversion.autoConvertFormatsInvalidDetail'));
       return;
     }
 
     const unsupported = formats.find(format => !supportedFormats.includes(format));
     if (unsupported) {
-      this.showMessage('error', this.t.translate('settingsApp.fileManagement.invalidInput'), this.t.translate('settingsApp.fileManagement.autoConvertFormatsUnsupported', {value: unsupported}));
+      this.showMessage('error', this.t.translate('settingsApp.conversion.invalidInput'), this.t.translate('settingsApp.conversion.autoConvertFormatsUnsupported', {value: unsupported}));
       return;
     }
 
