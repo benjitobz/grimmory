@@ -146,6 +146,27 @@ public class BookMetadataUpdater {
                     log.warn("Failed to write metadata for book ID {}: {}", bookId, e.getMessage());
                 }
             });
+
+            for (var additionalFile : bookEntity.getBookFiles()) {
+                if (!additionalFile.isBook() || additionalFile.getBookType() == null
+                        || additionalFile.getId() == null || additionalFile.getId().equals(primaryFile.getId())) {
+                    continue;
+                }
+                metadataWriterFactory.getWriter(additionalFile.getBookType()).ifPresent(writer -> {
+                    try {
+                        String thumbnailUrl = updateThumbnail ? newMetadata.getThumbnailUrl() : null;
+                        if ((StringUtils.hasText(thumbnailUrl) && isLocalOrPrivateUrl(thumbnailUrl) || Boolean.TRUE.equals(metadata.getCoverLocked()))) {
+                            thumbnailUrl = null;
+                        }
+                        File additionalFileHandle = new File(additionalFile.getFullFilePath().toUri());
+                        writer.saveMetadataToFile(additionalFileHandle, metadata, thumbnailUrl, clearFlags);
+                        additionalFile.setCurrentHash(FileFingerprint.generateHash(additionalFile.getFullFilePath()));
+                    } catch (Exception e) {
+                        log.warn("Failed to write metadata to alternative format {} for book ID {}: {}", additionalFile.getFileName(), bookId, e.getMessage());
+                    }
+                });
+            }
+            bookRepository.save(bookEntity);
         }
 
         if (sidecarMetadataWriter.isWriteOnUpdateEnabled()) {

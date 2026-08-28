@@ -34,6 +34,9 @@ export class MetadataPersistenceSettingsComponent {
       pdf: this.createFormatSettingsGroup(250),
       cbx: this.createFormatSettingsGroup(250),
       audiobook: this.createFormatSettingsGroup(1000),
+      mobi: this.createFormatSettingsGroup(250),
+      azw3: this.createFormatSettingsGroup(250),
+      fb2: this.createFormatSettingsGroup(250),
     }),
     convertCbrCb7ToCbz: [false],
     moveFilesToLibraryPattern: [false],
@@ -107,6 +110,18 @@ export class MetadataPersistenceSettingsComponent {
           audiobook: {
             enabled: persistenceSettings.saveToOriginalFile?.audiobook?.enabled ?? false,
             maxFileSizeInMb: persistenceSettings.saveToOriginalFile?.audiobook?.maxFileSizeInMb ?? 1000
+          },
+          mobi: {
+            enabled: persistenceSettings.saveToOriginalFile?.mobi?.enabled ?? false,
+            maxFileSizeInMb: persistenceSettings.saveToOriginalFile?.mobi?.maxFileSizeInMb ?? 250
+          },
+          azw3: {
+            enabled: persistenceSettings.saveToOriginalFile?.azw3?.enabled ?? false,
+            maxFileSizeInMb: persistenceSettings.saveToOriginalFile?.azw3?.maxFileSizeInMb ?? 250
+          },
+          fb2: {
+            enabled: persistenceSettings.saveToOriginalFile?.fb2?.enabled ?? false,
+            maxFileSizeInMb: persistenceSettings.saveToOriginalFile?.fb2?.maxFileSizeInMb ?? 250
           }
         },
         sidecarSettings: {
