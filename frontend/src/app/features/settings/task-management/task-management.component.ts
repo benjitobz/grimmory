@@ -1,4 +1,5 @@
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {Router} from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Button} from '@openng/optimus-ui/button';
 import {ProgressBar} from '@openng/optimus-ui/progressbar';
@@ -19,6 +20,7 @@ import {
   TaskType
 } from './task.service';
 import {MetadataRefreshRequest} from '../../metadata/model/request/metadata-refresh-request.model';
+import {AppSettingsService} from '../../../shared/service/app-settings.service';
 import {finalize, forkJoin} from 'rxjs';
 import {ExternalDocLinkComponent} from '../../../shared/components/external-doc-link/external-doc-link.component';
 import {ToggleSwitch} from '@openng/optimus-ui/toggleswitch';
@@ -49,6 +51,8 @@ export class TaskManagementComponent implements OnInit {
   private messageService = inject(MessageService);
   private taskService = inject(TaskService);
   private t = inject(TranslocoService);
+  private router = inject(Router);
+  private appSettingsService = inject(AppSettingsService);
   private readonly destroyRef = inject(DestroyRef);
 
   // State
@@ -463,6 +467,21 @@ export class TaskManagementComponent implements OnInit {
 
   getTaskLabel(taskType: string): string {
     return `${this.getTaskDisplayOrder(taskType)}. ${this.getTaskDisplayName(taskType)}`;
+  }
+
+  isAutoConvertUnconfigured(taskType: string): boolean {
+    if (taskType !== TaskType.AUTO_CONVERT_MISSING_FORMATS) {
+      return false;
+    }
+    const settings = this.appSettingsService.appSettings();
+    if (!settings) {
+      return false;
+    }
+    return !settings.autoConvertEnabled || !(settings.autoConvertFormats ?? '').trim();
+  }
+
+  openConversionSettings(): void {
+    this.router.navigate(['/settings'], {queryParams: {tab: 'application'}});
   }
 
   getTaskIcon(taskType: string): string {

@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Opravilo osveževanja metapodatkov je že v teku. Počakaj, da se konča, preden začneš novega.",
         "metadataFailed": "Posodobitev metapodatkov ni uspela",
         "metadataFailedDetail": "Prišlo je do nepričakovane napake pri načrtovanju posodobitve metapodatkov. Poskusi znova pozneje ali stopi v stik s podporo."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

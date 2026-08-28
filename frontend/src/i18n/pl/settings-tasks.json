@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Zadanie odświeżania metadanych jest już w toku. Poczekaj na jego zakończenie przed uruchomieniem kolejnego.",
         "metadataFailed": "Aktualizacja metadanych nie powiodła się",
         "metadataFailedDetail": "Wystąpił nieoczekiwany błąd podczas planowania aktualizacji metadanych. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

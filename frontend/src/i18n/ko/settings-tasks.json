@@ -65,5 +65,8 @@
     "metadataAlreadyRunningDetail": "",
     "metadataFailed": "",
     "metadataFailedDetail": ""
+  },
+  "autoConvert": {
+    "configure": "Configure"
   }
 }

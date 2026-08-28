@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Er wordt al een metadata-verversionstaak uitgevoerd. Wacht tot deze is voltooid voordat u een nieuwe start.",
         "metadataFailed": "Metadata-update mislukt",
         "metadataFailedDetail": "Er is een onverwachte fout opgetreden bij het inplannen van de metadata-update. Probeer het later opnieuw of neem contact op met ondersteuning als het probleem aanhoudt."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

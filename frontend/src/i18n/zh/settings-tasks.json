@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "元数据刷新任务已在进行中。请等待其完成后再启动新任务。",
         "metadataFailed": "元数据更新失败",
         "metadataFailedDetail": "计划元数据更新时发生意外错误。请稍后重试或联系支持团队。"
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

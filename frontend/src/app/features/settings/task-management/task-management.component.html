@@ -118,7 +118,7 @@
                       }
                       <p-toggleswitch
                         [ngModel]="getCronConfig(taskInfo.taskType)?.enabled ?? false"
-                        [disabled]="isEditingCron(taskInfo.taskType) || cronUpdating"
+                        [disabled]="isEditingCron(taskInfo.taskType) || cronUpdating || isAutoConvertUnconfigured(taskInfo.taskType)"
                         (ngModelChange)="toggleCronEnabled(taskInfo.taskType)">
                       </p-toggleswitch>
                     </div>
@@ -132,7 +132,15 @@
                 }
 
                 <div class="task-actions">
-                  @if (canExecuteTask(taskInfo.taskType) || isTaskStale(getTaskHistory(taskInfo.taskType))) {
+                  @if (isAutoConvertUnconfigured(taskInfo.taskType)) {
+                    <p-button
+                      [label]="t('autoConvert.configure')"
+                      icon="pi pi-cog"
+                      severity="info"
+                      [outlined]="true"
+                      (onClick)="openConversionSettings()">
+                    </p-button>
+                  } @else if (canExecuteTask(taskInfo.taskType) || isTaskStale(getTaskHistory(taskInfo.taskType))) {
                     <p-button
                       [label]="getTaskButtonLabel(taskInfo.taskType)"
                       [icon]="getTaskButtonIcon(taskInfo.taskType)"

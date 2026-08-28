@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "En metadatauppdatering pågår redan. Vänta tills den slutförs innan du startar en ny.",
         "metadataFailed": "Metadatauppdatering misslyckades",
         "metadataFailedDetail": "Ett oväntat fel uppstod vid schemaläggning av metadatauppdateringen. Försök igen senare eller kontakta support om problemet kvarstår."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

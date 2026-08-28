@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Zadatak osvježavanja metapodataka je već u tijeku. Pričekajte da završi prije pokretanja novog.",
         "metadataFailed": "Ažuriranje metapodataka nije uspjelo",
         "metadataFailedDetail": "Došlo je do neočekivane pogreške prilikom zakazivanja ažuriranja metapodataka. Pokušajte ponovo kasnije ili se obratite podršci ako problem i dalje postoji."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }
