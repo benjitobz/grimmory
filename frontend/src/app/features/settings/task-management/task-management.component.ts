@@ -473,7 +473,8 @@ export class TaskManagementComponent implements OnInit {
       [TaskType.CLEANUP_DELETED_BOOKS]: 'pi-trash',
       [TaskType.SYNC_LIBRARY_FILES]: 'pi-sync',
       [TaskType.BOOKDROP_PERIODIC_SCANNING]: 'pi-inbox',
-      [TaskType.CLEANUP_TEMP_METADATA]: 'pi-file'
+      [TaskType.CLEANUP_TEMP_METADATA]: 'pi-file',
+      [TaskType.AUTO_CONVERT_MISSING_FORMATS]: 'pi-file-export'
     };
     return icons[taskType] || 'pi-cog';
   }
