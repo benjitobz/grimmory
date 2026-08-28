@@ -71,7 +71,7 @@ ADD \
 
 FROM kepubify-layer-${TARGETARCH} AS kepubify-layer
 
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:25-jre-noble
 
 ENV JAVA_TOOL_OPTIONS="-XX:+UseShenandoahGC \
     -XX:ShenandoahGCHeuristics=compact \
@@ -91,11 +91,17 @@ ENV JAVA_TOOL_OPTIONS="-XX:+UseShenandoahGC \
     --enable-native-access=ALL-UNNAMED \
     --enable-preview"
 
-RUN apk add --no-cache su-exec libstdc++ libgcc libarchive && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gosu wget curl ca-certificates libarchive13t64 calibre && \
+    curl -fsSL https://r.mariadb.com/downloads/mariadb_repo_setup -o /tmp/mariadb_repo_setup && \
+    bash /tmp/mariadb_repo_setup --mariadb-server-version=11.4 && \
+    apt-get install -y --no-install-recommends mariadb-server mariadb-client && \
+    rm -rf /var/lib/apt/lists/* /tmp/mariadb_repo_setup && \
     mkdir -p /bookdrop
 
 # Manually link `libarchive.so.13` so java and other libraries can see it
-RUN ln -s /usr/lib/libarchive.so.13 /usr/lib/libarchive.so
+RUN ln -s "$(find /usr/lib -name 'libarchive.so.13' -print -quit)" /usr/lib/libarchive.so
 
 COPY packaging/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
@@ -116,7 +122,7 @@ LABEL org.opencontainers.image.title="Grimmory" \
     org.opencontainers.image.version=$APP_VERSION \
     org.opencontainers.image.revision=$APP_REVISION \
     org.opencontainers.image.licenses="AGPL-3.0" \
-    org.opencontainers.image.base.name="docker.io/library/eclipse-temurin:25-jre-alpine"
+    org.opencontainers.image.base.name="docker.io/library/eclipse-temurin:25-jre-noble"
 
 ENV APP_VERSION=${APP_VERSION} \
     APP_REVISION=${APP_REVISION}
