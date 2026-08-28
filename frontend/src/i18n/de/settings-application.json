@@ -1,51 +1,51 @@
 {
-  "title": "Globale Einstellungen",
-  "description": "Konfigurieren Sie globale Einstellungen für Ihre Grimmory-Instanz, einschließlich Coverbild-Verarbeitung, Sucheinstellungen und Dateiupload-Limits.",
-  "covers": {
-    "sectionTitle": "Buchcover-Bild",
-    "regenerate": "Cover neu generieren",
-    "regenerateDesc": "Generiert Coverbilder für alle Bücher aus den in der Datei eingebetteten Covern neu. Verwenden Sie „Fehlende neu generieren“, um nur Cover für Bücher zu erstellen, die noch kein Cover haben.",
-    "regenerateStarted": "Cover-Neugenerierung gestartet",
-    "regenerateStartedDetail": "Buchcover werden neu generiert.",
-    "regenerateError": "Cover-Neugenerierung konnte nicht gestartet werden.",
-    "verticalCropping": "Vertikaler Cover-Zuschnitt",
-    "verticalCroppingDesc": "Extrem hohe Bilder (wie Web-Comics) automatisch von oben zuschneiden, um brauchbare Cover-Miniaturansichten zu erstellen.",
-    "horizontalCropping": "Horizontaler Cover-Zuschnitt",
-    "horizontalCroppingDesc": "Extrem breite Bilder automatisch von links zuschneiden, um brauchbare Cover-Miniaturansichten zu erstellen.",
-    "aspectRatio": "Seitenverhältnis-Schwellenwert: {{value}}",
-    "aspectRatioDesc": "Bilder mit Seitenverhältnissen über diesem Schwellenwert werden zugeschnitten. Ein Wert von 2,5 bedeutet, dass Bilder, die mehr als 2,5-mal höher (oder breiter) als normal sind, zugeschnitten werden.",
-    "smartCropping": "Intelligenter Zuschnitt",
-    "smartCroppingDesc": "Gleichmäßige Farbbereiche beim Zuschnitt überspringen. Fokussiert das Coverbild auf den relevantesten Inhalt.",
-    "regenerateAllBtn": "Alle neu generieren",
-    "regenerateMissingBtn": "Fehlende neu generieren"
-  },
-  "search": {
-    "sectionTitle": "Suche & Empfehlungen",
-    "autoBookSearch": "Automatische Buchsuche",
-    "autoBookSearchDesc": "Versucht automatisch Metadaten abzugleichen, wenn das Buchinformationspanel geöffnet wird.",
-    "similarBook": "Buchempfehlungen",
-    "similarBookDesc": "Aktiviert oder deaktiviert Buchempfehlungen basierend auf Ihrer Bibliothek."
-  },
-  "fileManagement": {
-    "sectionTitle": "Dateiverwaltung",
-    "maxUploadSize": "Maximale Dateiupload-Größe",
-    "maxUploadPlaceholder": "Max. Größe",
-    "maxUploadDesc": "Legt die maximal erlaubte Größe (in MB) pro hochgeladener Datei fest. Gilt für alle unterstützten Formate.",
-    "restartWarning": "Änderungen werden nach einem Neustart des Servers wirksam",
-    "invalidInput": "Ungültige Eingabe",
-    "invalidInputDetail": "Bitte geben Sie eine gültige maximale Dateiupload-Größe in MB ein."
-  },
-  "settingsSaved": "Einstellungen gespeichert",
-  "settingsSavedDetail": "Die Einstellungen wurden erfolgreich gespeichert!",
-  "settingsError": "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.",
-  "conversion": {
-    "sectionTitle": "File Conversion",
-    "invalidInput": "Invalid Input",
-    "autoConvert": "Auto Conversion",
-    "autoConvertDesc": "Automatically convert newly added books into the wanted formats below. Formats a book already has are skipped.",
-    "autoConvertFormats": "Wanted Formats",
-    "autoConvertFormatsPlaceholder": "epub, azw3",
-    "autoConvertFormatsDesc": "Comma separated list of formats to create for each new book if missing. Supported: epub, mobi, azw3, fb2, pdf.",
-    "autoConvertFormatsUnsupported": "Unsupported format: {{value}}. Supported formats are epub, mobi, azw3, fb2 and pdf."
-  }
+    "title": "Globale Einstellungen",
+    "description": "Konfigurieren Sie globale Einstellungen für Ihre Grimmory-Instanz, einschließlich Coverbild-Verarbeitung, Sucheinstellungen und Dateiupload-Limits.",
+    "covers": {
+        "sectionTitle": "Buchcover-Bild",
+        "regenerate": "Cover neu generieren",
+        "regenerateDesc": "Generiert Coverbilder für alle Bücher aus den in der Datei eingebetteten Covern neu. Verwenden Sie „Fehlende neu generieren“, um nur Cover für Bücher zu erstellen, die noch kein Cover haben.",
+        "regenerateStarted": "Cover-Neugenerierung gestartet",
+        "regenerateStartedDetail": "Buchcover werden neu generiert.",
+        "regenerateError": "Cover-Neugenerierung konnte nicht gestartet werden.",
+        "verticalCropping": "Vertikaler Cover-Zuschnitt",
+        "verticalCroppingDesc": "Extrem hohe Bilder (wie Web-Comics) automatisch von oben zuschneiden, um brauchbare Cover-Miniaturansichten zu erstellen.",
+        "horizontalCropping": "Horizontaler Cover-Zuschnitt",
+        "horizontalCroppingDesc": "Extrem breite Bilder automatisch von links zuschneiden, um brauchbare Cover-Miniaturansichten zu erstellen.",
+        "aspectRatio": "Seitenverhältnis-Schwellenwert: {{value}}",
+        "aspectRatioDesc": "Bilder mit Seitenverhältnissen über diesem Schwellenwert werden zugeschnitten. Ein Wert von 2,5 bedeutet, dass Bilder, die mehr als 2,5-mal höher (oder breiter) als normal sind, zugeschnitten werden.",
+        "smartCropping": "Intelligenter Zuschnitt",
+        "smartCroppingDesc": "Gleichmäßige Farbbereiche beim Zuschnitt überspringen. Fokussiert das Coverbild auf den relevantesten Inhalt.",
+        "regenerateAllBtn": "Alle neu generieren",
+        "regenerateMissingBtn": "Fehlende neu generieren"
+    },
+    "search": {
+        "sectionTitle": "Suche & Empfehlungen",
+        "autoBookSearch": "Automatische Buchsuche",
+        "autoBookSearchDesc": "Versucht automatisch Metadaten abzugleichen, wenn das Buchinformationspanel geöffnet wird.",
+        "similarBook": "Buchempfehlungen",
+        "similarBookDesc": "Aktiviert oder deaktiviert Buchempfehlungen basierend auf Ihrer Bibliothek."
+    },
+    "fileManagement": {
+        "sectionTitle": "Dateiverwaltung",
+        "maxUploadSize": "Maximale Dateiupload-Größe",
+        "maxUploadPlaceholder": "Max. Größe",
+        "maxUploadDesc": "Legt die maximal erlaubte Größe (in MB) pro hochgeladener Datei fest. Gilt für alle unterstützten Formate.",
+        "restartWarning": "Änderungen werden nach einem Neustart des Servers wirksam",
+        "invalidInput": "Ungültige Eingabe",
+        "invalidInputDetail": "Bitte geben Sie eine gültige maximale Dateiupload-Größe in MB ein."
+    },
+    "settingsSaved": "Einstellungen gespeichert",
+    "settingsSavedDetail": "Die Einstellungen wurden erfolgreich gespeichert!",
+    "settingsError": "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.",
+    "conversion": {
+        "sectionTitle": "File Conversion",
+        "invalidInput": "Invalid Input",
+        "autoConvert": "Auto Conversion",
+        "autoConvertDesc": "Automatically convert newly added books into the wanted formats below. Formats a book already has are skipped.",
+        "autoConvertFormats": "Wanted Formats",
+        "autoConvertFormatsPlaceholder": "epub, azw3",
+        "autoConvertFormatsDesc": "Comma separated list of formats to create for each new book if missing. Supported: epub, mobi, azw3, fb2, pdf.",
+        "autoConvertFormatsUnsupported": "Unsupported format: {{value}}. Supported formats are epub, mobi, azw3, fb2 and pdf."
+    }
 }
