@@ -43,7 +43,6 @@
     "autoConvertFormats": "Wanted Formats",
     "autoConvertFormatsPlaceholder": "epub, azw3",
     "autoConvertFormatsDesc": "Comma separated list of formats to create for each new book if missing. Supported: epub, mobi, azw3, fb2, pdf.",
-    "autoConvertFormatsInvalidDetail": "Please enter at least one format, separated by commas.",
     "autoConvertFormatsUnsupported": "Unsupported format: {{value}}. Supported formats are epub, mobi, azw3, fb2 and pdf."
   },
   "settingsSaved": "Settings Saved",

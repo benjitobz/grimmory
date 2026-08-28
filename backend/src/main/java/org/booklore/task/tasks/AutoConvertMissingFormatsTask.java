@@ -9,7 +9,10 @@ import org.booklore.model.dto.response.TaskCreateResponse;
 import org.booklore.model.dto.settings.AppSettings;
 import org.booklore.model.enums.TaskType;
 import org.booklore.model.enums.UserPermission;
+import org.booklore.model.websocket.TaskProgressPayload;
+import org.booklore.model.websocket.Topic;
 import org.booklore.repository.BookRepository;
+import org.booklore.service.NotificationService;
 import org.booklore.service.appsettings.AppSettingService;
 import org.booklore.service.conversion.EbookConversionService;
 import org.booklore.task.TaskStatus;
@@ -23,9 +26,12 @@ import java.util.UUID;
 @Slf4j
 public class AutoConvertMissingFormatsTask implements Task {
 
+    private static final long MIN_NOTIFICATION_INTERVAL_MS = 250;
+
     private final BookRepository bookRepository;
     private final AppSettingService appSettingService;
     private final EbookConversionService ebookConversionService;
+    private final NotificationService notificationService;
 
     @Override
     public void validatePermissions(BookLoreUser user, TaskCreateRequest request) {
@@ -36,8 +42,9 @@ public class AutoConvertMissingFormatsTask implements Task {
 
     @Override
     public TaskCreateResponse execute(TaskCreateRequest request) {
+        String taskId = request.getTaskId() != null ? request.getTaskId() : UUID.randomUUID().toString();
         TaskCreateResponse.TaskCreateResponseBuilder builder = TaskCreateResponse.builder()
-                .taskId(UUID.randomUUID().toString())
+                .taskId(taskId)
                 .taskType(getTaskType());
 
         long startTime = System.currentTimeMillis();
@@ -47,31 +54,41 @@ public class AutoConvertMissingFormatsTask implements Task {
         List<String> wantedFormats = EbookConversionService.parseWantedFormats(settings.getAutoConvertFormats());
         if (!settings.isAutoConvertEnabled() || wantedFormats.isEmpty()) {
             log.warn("{}: Auto conversion is disabled or no wanted formats are configured under File Conversion, nothing to do", getTaskType());
-            builder.status(TaskStatus.FAILED);
+            sendProgress(taskId, 100, "Auto conversion is disabled or no wanted formats are configured", TaskStatus.COMPLETED, 0, true);
+            builder.status(TaskStatus.COMPLETED);
             return builder.build();
         }
 
         try {
             List<Long> bookIds = bookRepository.findAllActiveBookIds();
-            log.info("{}: Checking {} books for missing formats: {}", getTaskType(), bookIds.size(), wantedFormats);
+            int totalBooks = bookIds.size();
+            log.info("{}: Checking {} books for missing formats: {}", getTaskType(), totalBooks, wantedFormats);
+
+            long lastNotificationTime = sendProgress(taskId, 0,
+                    String.format("Checking %d books for missing formats", totalBooks), TaskStatus.IN_PROGRESS, 0, true);
 
             int processed = 0;
             for (Long bookId : bookIds) {
                 try {
-                    ebookConversionService.convertMissingFormats(bookId);
+                    ebookConversionService.convertMissingFormats(bookId, wantedFormats);
                 } catch (Exception e) {
                     log.error("{}: Failed to process book {}: {}", getTaskType(), bookId, e.getMessage(), e);
                 }
                 processed++;
+                int progress = totalBooks > 0 ? (processed * 100) / totalBooks : 100;
+                lastNotificationTime = sendProgress(taskId, progress,
+                        String.format("Checked %d of %d books", processed, totalBooks), TaskStatus.IN_PROGRESS, lastNotificationTime, false);
                 if (processed % 100 == 0) {
-                    log.info("{}: Processed {}/{} books", getTaskType(), processed, bookIds.size());
+                    log.info("{}: Processed {}/{} books", getTaskType(), processed, totalBooks);
                 }
             }
 
             log.info("{}: Processed {} books", getTaskType(), processed);
+            sendProgress(taskId, 100, String.format("Checked %d books for missing formats", processed), TaskStatus.COMPLETED, 0, true);
             builder.status(TaskStatus.COMPLETED);
         } catch (Exception e) {
             log.error("{}: Error converting missing formats", getTaskType(), e);
+            sendProgress(taskId, 100, "Conversion task failed: " + e.getMessage(), TaskStatus.FAILED, 0, true);
             builder.status(TaskStatus.FAILED);
         }
 
@@ -79,6 +96,26 @@ public class AutoConvertMissingFormatsTask implements Task {
         log.info("{}: Task completed. Duration: {} ms", getTaskType(), endTime - startTime);
 
         return builder.build();
+    }
+
+    private long sendProgress(String taskId, int progress, String message, TaskStatus taskStatus, long lastNotificationTime, boolean force) {
+        long currentTime = System.currentTimeMillis();
+        if (!force && (currentTime - lastNotificationTime) < MIN_NOTIFICATION_INTERVAL_MS) {
+            return lastNotificationTime;
+        }
+        try {
+            TaskProgressPayload payload = TaskProgressPayload.builder()
+                    .taskId(taskId)
+                    .taskType(getTaskType())
+                    .message(message)
+                    .progress(progress)
+                    .taskStatus(taskStatus)
+                    .build();
+            notificationService.sendMessage(Topic.TASK_PROGRESS, payload);
+        } catch (Exception e) {
+            log.error("Failed to send task progress notification for taskId={}: {}", taskId, e.getMessage(), e);
+        }
+        return currentTime;
     }
 
     @Override

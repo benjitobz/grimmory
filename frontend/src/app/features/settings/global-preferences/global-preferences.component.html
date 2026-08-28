@@ -228,6 +228,7 @@
                     type="text"
                     pInputText
                     [(ngModel)]="autoConvertFormats"
+                    (ngModelChange)="autoConvertFormatsTouched = true"
                     [placeholder]="t('conversion.autoConvertFormatsPlaceholder')"/>
                   <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveAutoConvertFormats()"></p-button>
                 </div>

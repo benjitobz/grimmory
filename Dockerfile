@@ -41,7 +41,7 @@ COPY backend/ ./
 COPY --from=frontend-build /workspace/frontend/dist/grimmory/browser /tmp/frontend-dist
 
 RUN --mount=type=cache,target=/home/gradle/.gradle \
-    TARGETARCH=${TARGETARCH} ./gradlew --no-daemon -PfrontendDistDir=/tmp/frontend-dist bootJar
+    TARGETARCH=${TARGETARCH} TARGETLIBC=gnu ./gradlew --no-daemon -PfrontendDistDir=/tmp/frontend-dist bootJar
 
 RUN set -eux; \
     jar_path="$(find build/libs -maxdepth 1 -name '*.jar' ! -name '*plain.jar' | head -n 1)"; \
@@ -93,15 +93,14 @@ ENV JAVA_TOOL_OPTIONS="-XX:+UseShenandoahGC \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        gosu wget curl ca-certificates libarchive13t64 calibre && \
-    curl -fsSL https://r.mariadb.com/downloads/mariadb_repo_setup -o /tmp/mariadb_repo_setup && \
-    bash /tmp/mariadb_repo_setup --mariadb-server-version=11.4 && \
+        gosu wget curl ca-certificates libarchive-dev calibre && \
+    install -d -m 0755 /etc/apt/keyrings && \
+    curl -fsSL https://mariadb.org/mariadb_release_signing_key.pgp -o /etc/apt/keyrings/mariadb.pgp && \
+    echo "deb [signed-by=/etc/apt/keyrings/mariadb.pgp] https://deb.mariadb.org/11.4/ubuntu noble main" > /etc/apt/sources.list.d/mariadb.list && \
+    apt-get update && \
     apt-get install -y --no-install-recommends mariadb-server mariadb-client && \
-    rm -rf /var/lib/apt/lists/* /tmp/mariadb_repo_setup && \
+    rm -rf /var/lib/apt/lists/* /var/lib/mysql/* && \
     mkdir -p /bookdrop
-
-# Manually link `libarchive.so.13` so java and other libraries can see it
-RUN ln -s "$(find /usr/lib -name 'libarchive.so.13' -print -quit)" /usr/lib/libarchive.so
 
 COPY packaging/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

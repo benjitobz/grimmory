@@ -65,11 +65,14 @@ export class GlobalPreferencesComponent implements OnInit {
     this.toggles.autoBookSearch = settings.autoBookSearch ?? false;
     this.toggles.similarBookRecommendation = settings.similarBookRecommendation ?? false;
     this.toggles.autoConvertEnabled = settings.autoConvertEnabled ?? false;
-    this.autoConvertFormats = settings.autoConvertFormats ?? '';
+    if (!this.autoConvertFormatsTouched) {
+      this.autoConvertFormats = settings.autoConvertFormats ?? '';
+    }
   });
 
   maxFileUploadSizeInMb?: number;
   autoConvertFormats = '';
+  autoConvertFormatsTouched = false;
   regenerateCoverMenuItems: MenuItem[] = [];
 
   ngOnInit(): void {
@@ -116,11 +119,6 @@ export class GlobalPreferencesComponent implements OnInit {
       .map(format => format.trim().toLowerCase())
       .filter(format => format.length > 0);
 
-    if (formats.length === 0) {
-      this.showMessage('error', this.t.translate('settingsApp.conversion.invalidInput'), this.t.translate('settingsApp.conversion.autoConvertFormatsInvalidDetail'));
-      return;
-    }
-
     const unsupported = formats.find(format => !supportedFormats.includes(format));
     if (unsupported) {
       this.showMessage('error', this.t.translate('settingsApp.conversion.invalidInput'), this.t.translate('settingsApp.conversion.autoConvertFormatsUnsupported', {value: unsupported}));
@@ -128,6 +126,7 @@ export class GlobalPreferencesComponent implements OnInit {
     }
 
     this.autoConvertFormats = [...new Set(formats)].join(', ');
+    this.autoConvertFormatsTouched = false;
     this.saveSetting(AppSettingKey.AUTO_CONVERT_FORMATS, this.autoConvertFormats);
   }
 
