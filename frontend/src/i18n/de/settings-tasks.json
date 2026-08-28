@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Eine Metadaten-Aktualisierung wird bereits ausgeführt. Bitte warten Sie, bis sie abgeschlossen ist, bevor Sie eine weitere starten.",
         "metadataFailed": "Metadaten-Aktualisierung fehlgeschlagen",
         "metadataFailedDetail": "Beim Planen der Metadaten-Aktualisierung ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support, wenn das Problem weiterhin besteht."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

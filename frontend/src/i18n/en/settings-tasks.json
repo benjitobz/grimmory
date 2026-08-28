@@ -65,5 +65,8 @@
     "metadataAlreadyRunningDetail": "A metadata refresh task is already in progress. Please wait for it to complete before starting another one.",
     "metadataFailed": "Metadata Update Failed",
     "metadataFailedDetail": "An unexpected error occurred while scheduling the metadata update. Please try again later or contact support if the issue persists."
+  },
+  "autoConvert": {
+    "configure": "Configure"
   }
 }

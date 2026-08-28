@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Un'attività di aggiornamento metadati è già in corso. Attendi il suo completamento prima di avviarne un'altra.",
         "metadataFailed": "Aggiornamento metadati fallito",
         "metadataFailedDetail": "Si è verificato un errore imprevisto durante la pianificazione dell'aggiornamento dei metadati. Riprova più tardi o contatta il supporto se il problema persiste."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

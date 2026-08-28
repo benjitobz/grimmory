@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Une tâche d'actualisation des métadonnées est déjà en cours. Veuillez attendre qu'elle se termine avant d'en lancer une autre.",
         "metadataFailed": "Échec de la mise à jour des métadonnées",
         "metadataFailedDetail": "Une erreur inattendue s'est produite lors de la planification de la mise à jour des métadonnées. Veuillez réessayer plus tard ou contacter le support si le problème persiste."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

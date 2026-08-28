@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Ya hay una tarea de actualización de metadatos en progreso. Por favor, espera a que finalice antes de iniciar otra.",
         "metadataFailed": "Error en la actualización de metadatos",
         "metadataFailedDetail": "Ocurrió un error inesperado al programar la actualización de metadatos. Por favor, inténtalo de nuevo más tarde o contacta con soporte si el problema persiste."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

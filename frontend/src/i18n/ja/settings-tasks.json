@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "メタデータ更新タスクは既に実行中です。完了するまでお待ちください。",
         "metadataFailed": "メタデータ更新に失敗しました",
         "metadataFailedDetail": "メタデータ更新のスケジュール中に予期しないエラーが発生しました。しばらくしてからもう一度お試しいただくか、問題が続く場合はサポートにお問い合わせください。"
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

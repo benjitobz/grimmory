@@ -65,5 +65,8 @@
         "run": ""
     },
     "loading": "",
-    "emptyTitle": ""
+    "emptyTitle": "",
+    "autoConvert": {
+        "configure": "Configure"
+    }
 }

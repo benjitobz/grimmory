@@ -65,5 +65,8 @@
         "metadataAlreadyRunningDetail": "Uma tarefa de atualização de metadados já está em andamento. Aguarde sua conclusão antes de iniciar outra.",
         "metadataFailed": "Atualização de Metadados Falhou",
         "metadataFailedDetail": "Ocorreu um erro inesperado ao agendar a atualização de metadados. Tente novamente mais tarde ou entre em contato com o suporte se o problema persistir."
+    },
+    "autoConvert": {
+        "configure": "Configure"
     }
 }

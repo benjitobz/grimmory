@@ -65,5 +65,8 @@
     },
     "description": "",
     "loading": "",
-    "emptyTitle": ""
+    "emptyTitle": "",
+    "autoConvert": {
+        "configure": "Configure"
+    }
 }
