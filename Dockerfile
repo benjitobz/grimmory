@@ -41,7 +41,7 @@ COPY backend/ ./
 COPY --from=frontend-build /workspace/frontend/dist/grimmory/browser /tmp/frontend-dist
 
 RUN --mount=type=cache,target=/home/gradle/.gradle \
-    TARGETARCH=${TARGETARCH} ./gradlew --no-daemon -PfrontendDistDir=/tmp/frontend-dist bootJar
+    TARGETARCH=${TARGETARCH} TARGETLIBC=gnu ./gradlew --no-daemon -PfrontendDistDir=/tmp/frontend-dist bootJar
 
 RUN set -eux; \
     jar_path="$(find build/libs -maxdepth 1 -name '*.jar' ! -name '*plain.jar' | head -n 1)"; \
@@ -71,7 +71,7 @@ ADD \
 
 FROM kepubify-layer-${TARGETARCH} AS kepubify-layer
 
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:25-jre-noble
 
 ENV JAVA_TOOL_OPTIONS="-XX:+UseShenandoahGC \
     -XX:ShenandoahGCHeuristics=compact \
@@ -91,11 +91,16 @@ ENV JAVA_TOOL_OPTIONS="-XX:+UseShenandoahGC \
     --enable-native-access=ALL-UNNAMED \
     --enable-preview"
 
-RUN apk add --no-cache su-exec libstdc++ libgcc libarchive && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gosu wget curl ca-certificates libarchive-dev && \
+    install -d -m 0755 /etc/apt/keyrings && \
+    curl -fsSL https://mariadb.org/mariadb_release_signing_key.pgp -o /etc/apt/keyrings/mariadb.pgp && \
+    echo "deb [signed-by=/etc/apt/keyrings/mariadb.pgp] https://deb.mariadb.org/11.4/ubuntu noble main" > /etc/apt/sources.list.d/mariadb.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends mariadb-server mariadb-client && \
+    rm -rf /var/lib/apt/lists/* /var/lib/mysql/* && \
     mkdir -p /bookdrop
-
-# Manually link `libarchive.so.13` so java and other libraries can see it
-RUN ln -s /usr/lib/libarchive.so.13 /usr/lib/libarchive.so
 
 COPY packaging/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
@@ -116,7 +121,7 @@ LABEL org.opencontainers.image.title="Grimmory" \
     org.opencontainers.image.version=$APP_VERSION \
     org.opencontainers.image.revision=$APP_REVISION \
     org.opencontainers.image.licenses="AGPL-3.0" \
-    org.opencontainers.image.base.name="docker.io/library/eclipse-temurin:25-jre-alpine"
+    org.opencontainers.image.base.name="docker.io/library/eclipse-temurin:25-jre-noble"
 
 ENV APP_VERSION=${APP_VERSION} \
     APP_REVISION=${APP_REVISION}
