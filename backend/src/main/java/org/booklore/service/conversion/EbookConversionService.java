@@ -2,12 +2,15 @@ package org.booklore.service.conversion;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.booklore.mapper.BookMapper;
 import org.booklore.model.dto.settings.AppSettings;
 import org.booklore.model.entity.BookEntity;
 import org.booklore.model.entity.BookFileEntity;
 import org.booklore.model.enums.BookFileType;
+import org.booklore.model.websocket.Topic;
 import org.booklore.repository.BookAdditionalFileRepository;
 import org.booklore.repository.BookRepository;
+import org.booklore.service.NotificationService;
 import org.booklore.service.appsettings.AppSettingService;
 import org.booklore.service.file.FileFingerprint;
 import org.booklore.service.monitoring.MonitoringRegistrationService;
@@ -53,6 +56,8 @@ public class EbookConversionService {
     private final AppSettingService appSettingService;
     private final FileService fileService;
     private final MonitoringRegistrationService monitoringRegistrationService;
+    private final BookMapper bookMapper;
+    private final NotificationService notificationService;
     private final TransactionTemplate transactionTemplate;
 
     public EbookConversionService(BookRepository bookRepository,
@@ -60,12 +65,16 @@ public class EbookConversionService {
                                   AppSettingService appSettingService,
                                   FileService fileService,
                                   MonitoringRegistrationService monitoringRegistrationService,
+                                  BookMapper bookMapper,
+                                  NotificationService notificationService,
                                   PlatformTransactionManager transactionManager) {
         this.bookRepository = bookRepository;
         this.additionalFileRepository = additionalFileRepository;
         this.appSettingService = appSettingService;
         this.fileService = fileService;
         this.monitoringRegistrationService = monitoringRegistrationService;
+        this.bookMapper = bookMapper;
+        this.notificationService = notificationService;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
@@ -106,6 +115,7 @@ public class EbookConversionService {
         }
 
         boolean monitoringPaused = false;
+        boolean anyAttached = false;
         try {
             for (TargetFormat target : plan.targets()) {
                 Path tempDir = null;
@@ -144,6 +154,7 @@ public class EbookConversionService {
 
                     transactionTemplate.executeWithoutResult(status ->
                             attachConvertedFile(plan, target, targetPath.getFileName().toString(), fileSize, fileHash));
+                    anyAttached = true;
                     log.info("Auto-convert: created {} for book {} at {}", target.extension(), plan.bookId(), targetPath);
                 } catch (Exception e) {
                     log.error("Auto-convert: failed to convert book {} to {}: {}", bookId, target.extension(), e.getMessage(), e);
@@ -161,6 +172,22 @@ public class EbookConversionService {
                     }
                 }
             }
+        }
+
+        if (anyAttached) {
+            broadcastBookUpdate(plan.bookId());
+        }
+    }
+
+    private void broadcastBookUpdate(long bookId) {
+        try {
+            var bookDto = transactionTemplate.execute(status ->
+                    bookRepository.findById(bookId).map(bookMapper::toBook).orElse(null));
+            if (bookDto != null) {
+                notificationService.sendMessage(Topic.BOOK_METADATA_UPDATE, bookDto);
+            }
+        } catch (Exception e) {
+            log.debug("Auto-convert: failed to broadcast book update for {}: {}", bookId, e.getMessage());
         }
     }
 
