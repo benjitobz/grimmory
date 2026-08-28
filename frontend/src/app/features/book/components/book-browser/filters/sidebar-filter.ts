@@ -79,8 +79,15 @@ export function doesBookMatchFilter(
       return effectiveMode === 'or'
         ? filterValues.some(val => book.metadata?.seriesName?.trim() === val)
         : filterValues.every(val => book.metadata?.seriesName?.trim() === val);
-    case 'bookType':
-      return book.isPhysical ? filterValues.includes('PHYSICAL') : filterValues.includes(book.primaryFile?.bookType);
+    case 'bookType': {
+      if (book.isPhysical) {
+        return filterValues.includes('PHYSICAL');
+      }
+      const bookTypes: (string | undefined)[] = [book.primaryFile?.bookType, ...(book.alternativeFormats?.map(file => file.bookType) ?? [])];
+      return effectiveMode === 'or'
+        ? filterValues.some(val => bookTypes.includes(val as string))
+        : filterValues.every(val => bookTypes.includes(val as string));
+    }
     case 'readStatus':
       return doesBookMatchReadStatus(book, filterValues);
     case 'personalRating':
