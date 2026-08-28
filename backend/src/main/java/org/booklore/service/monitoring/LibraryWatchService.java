@@ -194,6 +194,10 @@ public class LibraryWatchService implements SmartLifecycle {
     }
 
     public boolean registerPath(Path path, long libraryId) {
+        if (watchService == null) {
+            log.debug("File watch service is not running, cannot register path: {}", path);
+            return false;
+        }
         if (!Files.exists(path)) {
             log.warn("Cannot register path that does not exist: {}", path);
             return false;
