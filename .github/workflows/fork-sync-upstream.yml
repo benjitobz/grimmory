@@ -1,0 +1,169 @@
+name: Fork - Sync Upstream
+
+on:
+  schedule:
+    - cron: '23 */3 * * *'
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Rebuild both images even if nothing changed upstream'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: fork-sync-upstream
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_URL: https://github.com/grimmory-tools/grimmory.git
+
+jobs:
+  sync:
+    name: Sync Branches
+    if: github.repository == 'benjitobz/grimmory'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    outputs:
+      develop_changed: ${{ steps.sync.outputs.develop_changed }}
+      develop_sha: ${{ steps.sync.outputs.develop_sha }}
+      develop_short_sha: ${{ steps.sync.outputs.develop_short_sha }}
+      release_changed: ${{ steps.sync.outputs.release_changed }}
+      release_version: ${{ steps.sync.outputs.release_version }}
+
+    steps:
+      - name: Verify Sync Token Is Configured
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        run: |
+          set -eu
+          if [ -z "${SYNC_TOKEN}" ]; then
+            echo "::error::SYNC_TOKEN is not set. Mirroring develop rewrites files under .github/workflows/, which the built-in GITHUB_TOKEN is not permitted to push. Create a PAT with 'repo' and 'workflow' scope and save it as the SYNC_TOKEN repository secret."
+            exit 1
+          fi
+
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}
+
+      - name: Sync Branches From Upstream
+        id: sync
+        env:
+          FORCE_BUILD: ${{ inputs.force_build }}
+        run: |
+          set -eu
+
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          git remote add upstream "${UPSTREAM_URL}"
+          git fetch --quiet upstream develop main
+          git fetch --quiet --tags upstream
+          git fetch --quiet --tags origin
+
+          fail() {
+            echo "::error::$1"
+            {
+              echo "### Sync failed"
+              echo
+              echo "$1"
+              echo
+              echo "Resolve it locally, then push:"
+              echo '```'
+              echo "git fetch upstream && git checkout $2"
+              echo "git merge $3"
+              echo "# fix conflicts, then"
+              echo "git push origin $2"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          }
+
+          # --- develop: a hard mirror of upstream, never edited here ---
+          git checkout --quiet -B develop upstream/develop
+          git push --quiet --force origin develop
+          develop_sha="$(git rev-parse HEAD)"
+
+          # --- embedded-database: upstream develop + the embedded MariaDB patch ---
+          git checkout --quiet -B embedded-database origin/embedded-database
+          before="$(git rev-parse HEAD)"
+          git merge --no-edit develop || fail \
+            "Merging upstream develop into embedded-database hit a conflict. The embedded MariaDB patch touches Dockerfile and packaging/docker/entrypoint.sh, so upstream edits to those files are the likely cause." \
+            "embedded-database" "develop"
+          after="$(git rev-parse HEAD)"
+
+          if [ "${before}" != "${after}" ] || [ "${FORCE_BUILD}" = "true" ]; then
+            git push --quiet origin embedded-database
+            echo "develop_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "develop_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "develop_sha=${after}" >> "$GITHUB_OUTPUT"
+          echo "develop_short_sha=$(git rev-parse --short "${after}")" >> "$GITHUB_OUTPUT"
+
+          # --- embedded-main: newest upstream release tag + the same patch ---
+          latest_tag="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
+          if [ -z "${latest_tag}" ]; then
+            fail "No upstream release tags matching 'v*' were found." "embedded-main" "a release tag"
+          fi
+          marker="embedded-${latest_tag}"
+
+          if git rev-parse --quiet --verify "refs/tags/${marker}" >/dev/null && [ "${FORCE_BUILD}" != "true" ]; then
+            echo "release_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git checkout --quiet -B embedded-main origin/embedded-main
+            git merge --no-edit "${latest_tag}" || fail \
+              "Merging upstream ${latest_tag} into embedded-main hit a conflict." \
+              "embedded-main" "${latest_tag}"
+            git push --quiet origin embedded-main
+            git tag --force "${marker}"
+            git push --quiet --force origin "refs/tags/${marker}"
+            echo "release_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "release_version=${latest_tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Summarise
+        run: |
+          {
+            echo "### Upstream sync"
+            echo
+            echo "| Stream | Changed | At |"
+            echo "| --- | --- | --- |"
+            echo "| develop | ${{ steps.sync.outputs.develop_changed }} | \`${{ steps.sync.outputs.develop_short_sha }}\` |"
+            echo "| release | ${{ steps.sync.outputs.release_changed }} | \`${{ steps.sync.outputs.release_version }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build-develop:
+    name: Develop Image
+    needs: sync
+    if: needs.sync.outputs.develop_changed == 'true'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/fork-build-image.yml
+    with:
+      ref: embedded-database
+      app_version: develop-${{ needs.sync.outputs.develop_short_sha }}
+      image_tags: |
+        ghcr.io/benjitobz/grimmory:develop
+        ghcr.io/benjitobz/grimmory:develop-${{ needs.sync.outputs.develop_short_sha }}
+
+  build-release:
+    name: Release Image
+    needs: sync
+    if: needs.sync.outputs.release_changed == 'true'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/fork-build-image.yml
+    with:
+      ref: embedded-main
+      app_version: ${{ needs.sync.outputs.release_version }}
+      image_tags: |
+        ghcr.io/benjitobz/grimmory:latest
+        ghcr.io/benjitobz/grimmory:${{ needs.sync.outputs.release_version }}
