@@ -756,6 +756,9 @@
         "hardcoverReviewCount": "Hardcover Rating #",
         "audibleRating": "Audible Rating",
         "audibleReviewCount": "Audible Rating #",
+        "applebooksId": "Apple Books ID",
+        "applebooksRating": "Apple Books ★",
+        "applebooksReviewCount": "Apple Books #",
         "doubanRating": "Douban Rating",
         "doubanReviewCount": "Douban Rating #",
         "ranobedbRating": "Ranobedb Rating"
@@ -770,6 +773,7 @@
         "goodreads": "Goodreads",
         "hardcover": "Hardcover",
         "audible": "Audible",
+        "applebooks": "Apple Books",
         "comicvine": "Comicvine",
         "lubimyczytac": "Lubimyczytac",
         "ranobedb": "Ranobedb"
@@ -793,7 +797,10 @@
         "ranobedbRating": "Ranobedb Rating",
         "audibleId": "Audible ID",
         "audibleRating": "Audible Rating",
-        "audibleReviewCount": "Audible Review Count"
+        "audibleReviewCount": "Audible Review Count",
+        "applebooksId": "Apple Books ID",
+        "applebooksRating": "Apple Books Rating",
+        "applebooksReviewCount": "Apple Books Review Count"
       }
     }
   },
@@ -2265,6 +2272,9 @@
       "audibleId": "Audible ID",
       "audibleRating": "Audible ★",
       "audibleReviewCount": "Audible #",
+      "applebooksId": "Apple Books ID",
+      "applebooksRating": "Apple Books ★",
+      "applebooksReviewCount": "Apple Books #",
       "closeBtn": "Close",
       "previousBookBtn": "Previous Book",
       "nextBookBtn": "Next Book",
@@ -5206,14 +5216,17 @@
       "ranobedbRating": "Ranobedb Rating",
       "lubimyczytacRating": "LubimyCzytac Rating",
       "audibleRating": "Audible Rating",
+      "applebooksRating": "Apple Books Rating",
       "amazonReviewCount": "Amazon Reviews",
       "goodreadsReviewCount": "Goodreads Reviews",
       "hardcoverReviewCount": "Hardcover Reviews",
       "audibleReviewCount": "Audible Reviews",
+      "applebooksReviewCount": "Apple Books Review Count",
       "goodreadsId": "Goodreads ID",
       "hardcoverId": "Hardcover ID",
       "googleId": "Google ID",
       "audibleId": "Audible ID",
+      "applebooksId": "Apple Books ID",
       "lubimyczytacId": "Lubimyczytac ID",
       "ranobedbId": "Ranobedb ID",
       "comicvineId": "ComicVine ID",
