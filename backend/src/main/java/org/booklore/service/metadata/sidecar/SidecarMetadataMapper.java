@@ -100,6 +100,7 @@ public class SidecarMetadataMapper {
         if (m.getIdentifiers() != null) {
             SidecarIdentifiers ids = m.getIdentifiers();
             builder.asin(ids.getAsin())
+                    .openlibraryId(ids.getOpenlibraryId())
                     .goodreadsId(ids.getGoodreadsId())
                     .googleId(ids.getGoogleId())
                     .hardcoverId(ids.getHardcoverId())
@@ -202,6 +203,7 @@ public class SidecarMetadataMapper {
                 .ranobedbId(entity.getRanobedbId())
                 .audibleId(entity.getAudibleId())
                 .applebooksId(entity.getApplebooksId())
+                .openlibraryId(entity.getOpenlibraryId())
                 .build();
     }
 

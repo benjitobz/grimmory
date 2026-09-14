@@ -327,6 +327,7 @@ export class MetadataSearcherComponent implements OnDestroy, OnChanges {
   private getProviderFromMetadata(metadata: BookMetadata): string | null {
     if (metadata.audibleId) return 'audible';
     if (metadata.applebooksId) return 'applebooks';
+    if (metadata.openlibraryId) return 'openlibrary';
     if (metadata.asin) return 'amazon';
     if (metadata.goodreadsId) return 'goodreads';
     if (metadata.googleId) return 'google';
@@ -443,6 +444,7 @@ export class MetadataSearcherComponent implements OnDestroy, OnChanges {
       case 'GoodReads': return metadata.goodreadsId;
       case 'Amazon': return metadata.asin;
       case 'Audible': return metadata.audibleId;
+      case 'OpenLibrary': return metadata.openlibraryId;
       default: return undefined;
     }
   }
@@ -465,6 +467,10 @@ export class MetadataSearcherComponent implements OnDestroy, OnChanges {
   getProviderHref(metadata: BookMetadata): string | null {
     if (metadata.externalUrl) {
       return metadata.externalUrl;
+    }
+
+    if (metadata.openlibraryId) {
+      return `https://openlibrary.org/${metadata.openlibraryId.replace(/^\//, '')}`
     }
 
     if (metadata.audibleId) {
@@ -526,6 +532,10 @@ export class MetadataSearcherComponent implements OnDestroy, OnChanges {
       return metadata.provider;
     }
 
+    if (metadata.openlibraryId) {
+      return 'OpenLibrary';
+    }
+
     if (metadata.audibleId) {
       // Audible has to come before Amazon because they both have an ASIN.
       return 'Audible';
@@ -571,7 +581,7 @@ export class MetadataSearcherComponent implements OnDestroy, OnChanges {
   }
 
   trackByMetadata(index: number, metadata: BookMetadata): string {
-    return metadata.googleId || metadata.goodreadsId || metadata.asin ||
+    return metadata.openlibraryId || metadata.googleId || metadata.goodreadsId || metadata.asin ||
       metadata.hardcoverId || metadata.comicvineId || metadata.audibleId ||
       metadata.applebooksId || index.toString();
   }
