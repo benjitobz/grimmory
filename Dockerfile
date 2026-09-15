@@ -5,7 +5,7 @@ ENV PATH="${PNPM_HOME}:${PATH}"
 
 WORKDIR /workspace
 
-RUN npm install --ignore-scripts -g pnpm@11.18.0
+RUN npm install --ignore-scripts -g pnpm@11.19.0
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,target=/pnpm/store \
@@ -37,6 +37,7 @@ RUN chmod +x ./gradlew
 RUN --mount=type=cache,target=/home/gradle/.gradle \
     ./gradlew --no-daemon dependencies
 
+COPY LICENSE NOTICE /workspace/
 COPY backend/ ./
 COPY --from=frontend-build /workspace/frontend/dist/grimmory/browser /tmp/frontend-dist
 

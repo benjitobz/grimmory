@@ -45,6 +45,7 @@ public class BookBrowseService {
     private static final String PAGE_PATH = "/api/v1/books/page";
     private static final String FACET_PATH = "/api/v1/books/facets";
     private static final int MAX_PAGE_SIZE = 100;
+    private static final int MAX_RANDOM_SORT_SEED = 999;
 
     private final AuthenticationService authenticationService;
     private final BookQueryService bookQueryService;
@@ -69,16 +70,19 @@ public class BookBrowseService {
         long offset;
         int limit;
         String sortString;
+        Integer randomSeed;
         if (cursor != null) {
             CursorState state = cursorCodec.decode(cursor);
             cursorCodec.verifyParamsMatch(state, paramsHash);
             offset = state.offset();
             limit = state.limit();
             sortString = state.sort();
+            randomSeed = state.randomSeed();
         } else {
             offset = pageable.getOffset();
             limit = pageable.getPageSize();
             sortString = sort;
+            randomSeed = (int) (Math.random() * MAX_RANDOM_SORT_SEED);
         }
         if (limit <= 0) {
             throw ApiError.INVALID_INPUT.createException("Page size must be positive.");
@@ -87,13 +91,13 @@ public class BookBrowseService {
 
         List<SortTerm> sortTerms = SortParser.parse(sortString, sortRegistry.registry().keys());
         Specification<BookEntity> filter = filterSpecifications.base(query, facets, facetLogic, userId, isAdmin, BookFilterSpecifications.libraryIds(user), null);
-        Specification<BookEntity> spec = withSort(filter, sortTerms, userId);
+        Specification<BookEntity> spec = withSort(filter, sortTerms, userId, randomSeed);
 
         Pageable pageRequest = PageRequest.of((int) (offset / limit), limit);
         Page<Book> page = bookQueryService.findBooksPaged(spec, pageRequest, userId);
         enrich(page.getContent(), userId);
 
-        CursorState baseState = new CursorState(offset, limit, sortString, paramsHash);
+        CursorState baseState = new CursorState(offset, limit, sortString, paramsHash, randomSeed);
         String currentCursor = cursorCodec.encode(baseState);
         List<Link> links = linksBuilder.build(new LinksBuilder.Context(
                 PAGE_PATH, FACET_PATH, BrowseParams.preserved(facet, facetLogicParam, query), offset, limit, page.getTotalElements(), baseState));
@@ -119,7 +123,11 @@ public class BookBrowseService {
         if (predicate != null) {
             cq.where(predicate);
         }
-        cq.orderBy(sortRegistry.registry().toOrders(sortTerms, root, cq, cb, userId));
+
+        // The `findAllIds` doesn't pass a cursor so it's a random seed every time.
+        int randomSeed = (int) (Math.random() * MAX_RANDOM_SORT_SEED);
+
+        cq.orderBy(sortRegistry.registry().toOrders(sortTerms, root, cq, cb, userId, randomSeed));
 
         return entityManager.createQuery(cq).getResultList();
     }
@@ -127,17 +135,22 @@ public class BookBrowseService {
     public BrowsePage<Book> wrapLegacy(Page<Book> page, Pageable pageable) {
         long offset = pageable.getOffset();
         int limit = pageable.getPageSize();
+
         String paramsHash = ParamsHash.compute(null, Map.of(), FacetLogic.AND);
-        CursorState baseState = new CursorState(offset, limit, null, paramsHash);
+
+        // Pass a null random seed for the legacy case - we don't actually store a seed value and
+        // this is good enough for most use cases.
+        CursorState baseState = new CursorState(offset, limit, null, paramsHash, null);
+
         List<Link> links = linksBuilder.build(new LinksBuilder.Context(
                 PAGE_PATH, FACET_PATH, "", offset, limit, page.getTotalElements(), baseState));
         return BrowsePage.of(page.getContent(), offset, limit, page.getTotalElements(), cursorCodec.encode(baseState), links);
     }
 
-    private Specification<BookEntity> withSort(Specification<BookEntity> filter, List<SortTerm> sortTerms, Long userId) {
+    private Specification<BookEntity> withSort(Specification<BookEntity> filter, List<SortTerm> sortTerms, Long userId, Integer randomSeed) {
         return (root, query, cb) -> {
             if (query.getResultType() != Long.class && query.getResultType() != long.class) {
-                query.orderBy(sortRegistry.registry().toOrders(sortTerms, root, query, cb, userId));
+                query.orderBy(sortRegistry.registry().toOrders(sortTerms, root, query, cb, userId, randomSeed));
             }
             return filter.toPredicate(root, query, cb);
         };

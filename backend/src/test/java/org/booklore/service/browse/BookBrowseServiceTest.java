@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.booklore.BookloreApplication;
 import org.booklore.browse.BrowsePage;
+import org.booklore.browse.CursorCodec;
 import org.booklore.browse.Link;
 import org.booklore.exception.APIException;
 import org.booklore.config.security.service.AuthenticationService;
@@ -52,7 +53,7 @@ import static org.mockito.Mockito.when;
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
         "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
-        "spring.datasource.url=jdbc:h2:mem:browseservicetest;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE",
+        "spring.datasource.url=jdbc:h2:mem:browseservicetest;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE;MODE=MYSQL",
         "spring.datasource.driver-class-name=org.h2.Driver",
         "spring.datasource.username=sa",
         "spring.datasource.password=",
@@ -206,6 +207,17 @@ class BookBrowseServiceTest {
     }
 
     @Test
+    void generatesRandomSeedForCursor() {
+        var page = browse("random", null, null, null, 0, 2);
+        String cursor = page.page().cursor();
+
+        var codec = new CursorCodec();
+        var values = codec.decode(cursor);
+
+        assertThat(values.randomSeed()).isNotNull();
+    }
+
+    @Test
     void cursorWithConflictingFacetsIsRejected() {
         book("Alpha", List.of("Horror"));
         em.flush();
@@ -216,12 +228,27 @@ class BookBrowseServiceTest {
     }
 
     @Test
+    void randomSortIsSameWithSameCursor() {
+        for (int i = 0; i < 5; i++) {
+            book(String.format("Book%02d", i), List.of());
+        }
+        em.flush();
+
+        var response = browse("random", null, null, null, 0, 20);
+
+        var ids = response.content().stream().map(Book::getId).toList();
+
+        assertThat(browse("random", null, null, response.page().cursor(), 0, 20)
+                .content().stream().map(Book::getId).toList()).isEqualTo(ids);
+
+        assertThat(browse("random", null, null, response.page().cursor(), 0, 20)
+                .content().stream().map(Book::getId).toList()).isEqualTo(ids);
+    }
+
+    @Test
     void deferredSortKeyIsRejected() {
         book("Alpha", List.of());
         em.flush();
-        assertThatThrownBy(() -> browse("random", null, null, null, 0, 20))
-                .isInstanceOfSatisfying(APIException.class, e -> assertThat(e.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST))
-                .hasMessageContaining("Unknown sort key");
         assertThatThrownBy(() -> browse("fileSizeKb", null, null, null, 0, 20))
                 .isInstanceOfSatisfying(APIException.class, e -> assertThat(e.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST))
                 .hasMessageContaining("Unknown sort key");
