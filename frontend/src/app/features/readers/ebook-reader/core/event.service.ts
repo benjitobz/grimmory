@@ -63,6 +63,7 @@ export type ViewEvent =
   | { type: 'draw-annotation'; detail: DrawAnnotationEventDetail }
   | { type: 'show-annotation'; detail?: unknown }
   | { type: 'text-selected'; detail: TextSelection; popupPosition: PopupPosition }
+  | { type: 'text-deselected' }
   | { type: 'toggle-fullscreen' }
   | { type: 'toggle-shortcuts-help' }
   | { type: 'escape-pressed' }
@@ -338,6 +339,7 @@ export class ReaderEventService {
     this.selectionChangeTimeout = setTimeout(() => {
       const selection = doc.defaultView?.getSelection();
       if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
+        this.eventSubject.next({type: 'text-deselected'});
         return;
       }
 
@@ -411,7 +413,6 @@ export class ReaderEventService {
 
     if (hasSelection) {
       this.isTextSelectionInProgress = false;
-      event.preventDefault();
 
       setTimeout(() => {
         this.handleSelectionEnd(doc);
