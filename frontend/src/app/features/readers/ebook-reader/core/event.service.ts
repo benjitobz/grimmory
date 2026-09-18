@@ -78,6 +78,7 @@ interface ViewCallbacks {
   next: () => void;
   getCFI: (index: number, range: Range) => string | null;
   getContents: () => { index: number; doc: Document }[] | null;
+  isTapToTurnEnabled?: () => boolean;
 }
 
 @Injectable({
@@ -437,6 +438,8 @@ export class ReaderEventService {
       }
 
       if (touchDuration < this.LONG_HOLD_THRESHOLD_MS && Math.abs(deltaX) < 10 && deltaY < 10) {
+        const target = event.target as Element | null;
+        if (target?.closest('a[href]')) return;
         const iframe = doc.defaultView?.frameElement as HTMLIFrameElement | null;
         if (!iframe) return;
 
@@ -609,13 +612,13 @@ export class ReaderEventService {
     const leftThreshold = width * this.LEFT_ZONE_PERCENT;
     const rightThreshold = width * this.RIGHT_ZONE_PERCENT;
 
-    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const tapToTurnEnabled = this.viewCallbacks?.isTapToTurnEnabled?.() ?? true;
 
-    if (x < leftThreshold && !isMobile) {
+    if (x < leftThreshold && tapToTurnEnabled) {
       this.isNavigating = true;
       this.viewCallbacks?.prev();
       setTimeout(() => this.isNavigating = false, 300);
-    } else if (x > rightThreshold && !isMobile) {
+    } else if (x > rightThreshold && tapToTurnEnabled) {
       this.isNavigating = true;
       this.viewCallbacks?.next();
       setTimeout(() => this.isNavigating = false, 300);
