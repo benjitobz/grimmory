@@ -11,6 +11,8 @@ import {CoverComponent} from '../../../../../shared/components/cover/cover.compo
 import {getTranslocoModule} from '../../../../../core/testing/transloco-testing';
 import {MetadataPickerComponent} from '../metadata-picker/metadata-picker.component';
 import {MetadataSearcherComponent} from './metadata-searcher.component';
+import {MetadataProviderService} from '../../../service/metadata-provider.service';
+import {MetadataProvider} from '../../../model/metadata-provider.model';
 
 @Component({selector: 'app-metadata-picker', template: '', standalone: true})
 class PickerStub {
@@ -33,10 +35,12 @@ describe('MetadataSearcherComponent', () => {
   let component: MetadataSearcherComponent;
   let search$: Subject<BookMetadata>;
   let detail$: Subject<BookMetadata>;
+  let providers$: Subject<MetadataProvider[]>;
 
   const appSettings = signal<AppSettings | null>(null);
   const fetchBookMetadata = vi.fn();
   const fetchMetadataDetail = vi.fn();
+  const fetchMetadataProviders = vi.fn();
 
   const settings = (): AppSettings => ({
     autoBookSearch: false,
@@ -63,9 +67,11 @@ describe('MetadataSearcherComponent', () => {
   beforeEach(async () => {
     search$ = new Subject<BookMetadata>();
     detail$ = new Subject<BookMetadata>();
+    providers$ = new Subject<MetadataProvider[]>();
     appSettings.set(null);
     fetchBookMetadata.mockReset().mockReturnValue(search$.asObservable());
     fetchMetadataDetail.mockReset().mockReturnValue(detail$.asObservable());
+    fetchMetadataProviders.mockReset().mockReturnValue(providers$.asObservable());
 
     await TestBed.configureTestingModule({
       imports: [MetadataSearcherComponent, getTranslocoModule()],
@@ -73,6 +79,7 @@ describe('MetadataSearcherComponent', () => {
         provideZonelessChangeDetection(),
         {provide: AppSettingsService, useValue: {appSettings}},
         {provide: BookMetadataService, useValue: {fetchBookMetadata, fetchMetadataDetail}},
+        {provide: MetadataProviderService, useValue: {fetchMetadataProviders, fetchMetadataDetail}},
       ],
     })
       .overrideComponent(MetadataSearcherComponent, {

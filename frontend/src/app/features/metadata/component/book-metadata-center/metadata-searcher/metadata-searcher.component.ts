@@ -1,11 +1,12 @@
 import {Component, computed, effect, inject, input, OnDestroy, signal} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Button} from '@openng/optimus-ui/button';
 import {InputText} from '@openng/optimus-ui/inputtext';
 import {MultiSelect} from '@openng/optimus-ui/multiselect';
 import {Tooltip} from '@openng/optimus-ui/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {Subject, takeUntil} from 'rxjs';
+import {catchError, Subject, takeUntil} from 'rxjs';
 
 import {FetchMetadataRequest} from '../../../model/request/fetch-metadata-request.model';
 import {Book, BookMetadata} from '../../../../book/model/book.model';
@@ -13,6 +14,8 @@ import {AppSettingsService} from '../../../../../shared/service/app-settings.ser
 import {BookMetadataService} from '../../../../book/service/book-metadata.service';
 import {MetadataPickerComponent} from '../metadata-picker/metadata-picker.component';
 import {CoverComponent} from '../../../../../shared/components/cover/cover.component';
+import {MetadataProviderService} from '../../../service/metadata-provider.service';
+import {map} from 'rxjs/operators';
 
 const DETAIL_ID_FIELD: Record<string, keyof BookMetadata> = {
   GoodReads: 'goodreadsId',
@@ -74,6 +77,7 @@ export class MetadataSearcherComponent implements OnDestroy {
   private readonly formBuilder = inject(FormBuilder);
   private readonly bookMetadataService = inject(BookMetadataService);
   private readonly appSettingsService = inject(AppSettingsService);
+  private readonly metadataProviderService = inject(MetadataProviderService);
 
   readonly form: FormGroup = this.formBuilder.group({
     provider: null,
@@ -90,12 +94,13 @@ export class MetadataSearcherComponent implements OnDestroy {
   readonly selected = signal<BookMetadata | null>(null);
   readonly detailLoading = signal(false);
 
-  readonly providers = computed(() => {
-    const providerSettings = this.appSettingsService.appSettings()?.metadataProviderSettings ?? {};
-    return Object.entries(providerSettings)
-      .filter(([, value]) => this.isEnabledProviderSetting(value) && value.enabled)
-      .map(([key]) => capitalize(key));
-  });
+  readonly providers = toSignal(
+    this.metadataProviderService.fetchMetadataProviders()
+      .pipe(map(
+        providers => providers.filter(p => p.enabled).map(p => capitalize(p.name))
+      ))
+      .pipe(catchError(() => []))
+  );
 
   readonly resultsByProvider = computed(() => {
     const groups = new Map<string, BookMetadata[]>();
@@ -139,8 +144,8 @@ export class MetadataSearcherComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      if (!this.appSettingsService.appSettings()) return;
       const providers = this.providers();
+      if (!this.appSettingsService.appSettings() || !providers) return;
       const control = this.form.get('provider')!;
 
       if (!this.providersInitialised) {
@@ -164,11 +169,14 @@ export class MetadataSearcherComponent implements OnDestroy {
       }
 
       const settings = this.appSettingsService.appSettings();
-      if (!settings || book.id === this.bookId) return;
+      const providers = this.providers();
+      if (!settings || !providers || book.id === this.bookId) return;
 
       this.bookId = book.id;
       this.resetForBook(book);
-      this.autoSearchPending.set(!!settings.autoBookSearch);
+      if (providers.length > 0) {
+        this.autoSearchPending.set(!!settings.autoBookSearch);
+      }
     });
 
     effect(() => {
