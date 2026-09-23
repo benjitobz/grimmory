@@ -3,6 +3,13 @@
 Keeps this fork tracking `grimmory-tools/grimmory` and publishes images that carry the
 embedded MariaDB patch (`Dockerfile` + `packaging/docker/entrypoint.sh`).
 
+Two small backend patches ride along (both default to upstream behaviour):
+
+| Patch | Files | Why |
+| --- | --- | --- |
+| `KOBO_SHELF_NAME` env var picks the shelf the native Kobo sync ships (default `Kobo`) | `backend/.../model/enums/ShelfType.java` | the shelf is called "Kobo OS" on the media server |
+| admins may assign/unassign books on public shelves they do not own | `backend/.../service/book/BookUpdateService.java` (+ tests) | BookBridge files paired ebooks on one shared public shelf under more than one login |
+
 ## Branches
 
 | Branch | Contents | Updated by |

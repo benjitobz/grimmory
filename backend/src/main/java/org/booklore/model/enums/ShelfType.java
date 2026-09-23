@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ShelfType {
-    KOBO("Kobo", "tablet");
+    KOBO(koboShelfName(), "tablet");
 
     private final String name;
     private final String icon;
@@ -12,5 +12,10 @@ public enum ShelfType {
     ShelfType(String name, String icon) {
         this.name = name;
         this.icon = icon;
+    }
+
+    private static String koboShelfName() {
+        String configured = System.getenv("KOBO_SHELF_NAME");
+        return configured == null || configured.isBlank() ? "Kobo" : configured.trim();
     }
 }

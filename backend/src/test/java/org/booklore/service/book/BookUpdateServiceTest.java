@@ -342,4 +342,81 @@ class BookUpdateServiceTest {
 
         assertThrows(APIException.class, () -> bookUpdateService.assignShelvesToBooks(bookIds, assignIds, unassignIds));
     }
+
+    @Test
+    void assignShelvesToBooks_adminMayAssignPublicShelf() {
+        BookLoreUser user = mock(BookLoreUser.class);
+        when(authenticationService.getAuthenticatedUser()).thenReturn(user);
+        when(user.getId()).thenReturn(1L);
+
+        BookLoreUserEntity userEntity = new BookLoreUserEntity();
+        userEntity.setPermissions(UserPermissionsEntity.builder().permissionAdmin(true).build());
+        userEntity.setShelves(new HashSet<>());
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+
+        ShelfEntity publicShelf = new ShelfEntity();
+        publicShelf.setId(30L);
+        publicShelf.setPublic(true);
+        Set<Long> assignIds = new HashSet<>(Collections.singletonList(30L));
+        when(shelfRepository.findAllById(assignIds)).thenReturn(Collections.singletonList(publicShelf));
+
+        Set<Long> bookIds = new HashSet<>(Collections.singletonList(1L));
+        BookEntity bookEntity = spy(new BookEntity());
+        bookEntity.setId(1L);
+        bookEntity.setShelves(new HashSet<>());
+        LibraryPathEntity libraryPath = new LibraryPathEntity();
+        libraryPath.setPath("/mock/path/1");
+        doReturn(libraryPath).when(bookEntity).getLibraryPath();
+        BookFileEntity bookFileEntity = new BookFileEntity();
+        bookFileEntity.setBook(bookEntity);
+        bookFileEntity.setFileSubPath("sub1");
+        bookFileEntity.setFileName("file1.pdf");
+        bookEntity.setBookFiles(Set.of(bookFileEntity));
+        when(bookQueryService.findAllWithMetadataByIds(bookIds)).thenReturn(Collections.singletonList(bookEntity));
+        when(bookMapper.toBook(any())).thenReturn(mock(Book.class));
+        when(readingProgressService.fetchUserProgress(eq(1L), anySet())).thenReturn(Collections.emptyMap());
+        when(readingProgressService.fetchUserFileProgress(eq(1L), anySet())).thenReturn(Collections.emptyMap());
+
+        List<Book> result = bookUpdateService.assignShelvesToBooks(bookIds, assignIds, new HashSet<>());
+        assertEquals(1, result.size());
+        assertTrue(bookEntity.getShelves().contains(publicShelf));
+    }
+
+    @Test
+    void assignShelvesToBooks_adminMayNotAssignForeignPrivateShelf() {
+        BookLoreUser user = mock(BookLoreUser.class);
+        when(authenticationService.getAuthenticatedUser()).thenReturn(user);
+        when(user.getId()).thenReturn(1L);
+
+        BookLoreUserEntity userEntity = new BookLoreUserEntity();
+        userEntity.setPermissions(UserPermissionsEntity.builder().permissionAdmin(true).build());
+        userEntity.setShelves(new HashSet<>());
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+
+        ShelfEntity privateShelf = new ShelfEntity();
+        privateShelf.setId(40L);
+        privateShelf.setPublic(false);
+        Set<Long> assignIds = new HashSet<>(Collections.singletonList(40L));
+        when(shelfRepository.findAllById(assignIds)).thenReturn(Collections.singletonList(privateShelf));
+
+        Set<Long> bookIds = new HashSet<>(Collections.singletonList(1L));
+        assertThrows(APIException.class, () -> bookUpdateService.assignShelvesToBooks(bookIds, assignIds, new HashSet<>()));
+    }
+
+    @Test
+    void assignShelvesToBooks_readerMayNotAssignPublicShelf() {
+        BookLoreUser user = mock(BookLoreUser.class);
+        when(authenticationService.getAuthenticatedUser()).thenReturn(user);
+        when(user.getId()).thenReturn(1L);
+
+        BookLoreUserEntity userEntity = new BookLoreUserEntity();
+        userEntity.setPermissions(UserPermissionsEntity.builder().permissionAdmin(false).build());
+        userEntity.setShelves(new HashSet<>());
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+
+        Set<Long> bookIds = new HashSet<>(Collections.singletonList(1L));
+        Set<Long> assignIds = new HashSet<>(Collections.singletonList(30L));
+        assertThrows(APIException.class, () -> bookUpdateService.assignShelvesToBooks(bookIds, assignIds, new HashSet<>()));
+        verify(shelfRepository, never()).findAllById(any());
+    }
 }
