@@ -144,6 +144,11 @@ export interface PublicReviewSettings {
   providers: ReviewProviderConfig[];
 }
 
+export interface KoreaderSyncSettings {
+  externalServerEnabled: boolean;
+  externalServerUrl: string;
+}
+
 export interface KoboSettings {
   convertToKepub: boolean;
   conversionLimitInMb: number;
@@ -193,6 +198,7 @@ export interface AppSettings {
   metadataPersistenceSettings: MetadataPersistenceSettings;
   metadataPublicReviewsSettings: PublicReviewSettings;
   koboSettings: KoboSettings;
+  koreaderSyncSettings: KoreaderSyncSettings;
   coverCroppingSettings: CoverCroppingSettings;
   metadataDownloadOnBookdrop: boolean;
   metadataProviderSpecificFields: MetadataProviderSpecificFields;
@@ -245,6 +251,7 @@ export enum AppSettingKey {
   METADATA_DOWNLOAD_ON_BOOKDROP = 'METADATA_DOWNLOAD_ON_BOOKDROP',
   METADATA_PUBLIC_REVIEWS_SETTINGS = 'METADATA_PUBLIC_REVIEWS_SETTINGS',
   KOBO_SETTINGS = 'KOBO_SETTINGS',
+  KOREADER_SYNC_SETTINGS = 'KOREADER_SYNC_SETTINGS',
   COVER_CROPPING_SETTINGS = 'COVER_CROPPING_SETTINGS',
   METADATA_PROVIDER_SPECIFIC_FIELDS = 'METADATA_PROVIDER_SPECIFIC_FIELDS',
   OIDC_SESSION_DURATION_HOURS = 'OIDC_SESSION_DURATION_HOURS',

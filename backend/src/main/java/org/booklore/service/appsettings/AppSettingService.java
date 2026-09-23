@@ -264,17 +264,13 @@ public class AppSettingService {
         builder.oidcForceOnlyMode(oidcForceOnlyMode);
 
         builder.oidcProviderDetails(details);
-        builder.koreaderSyncUrlOverride(koreaderSyncUrlOverride());
+        builder.koreaderSyncUrlOverride(getKoreaderSyncSettings(settingsMap).effectiveExternalServerUrl());
 
         return builder.build();
     }
 
-    private String koreaderSyncUrlOverride() {
-        AppProperties.Koreader koreader = appProperties.getKoreader();
-        if (koreader == null || koreader.getSyncUrlOverride() == null || koreader.getSyncUrlOverride().isBlank()) {
-            return null;
-        }
-        return koreader.getSyncUrlOverride().trim();
+    private KoreaderSyncSettings getKoreaderSyncSettings(Map<AppSettingKey, String> settingsMap) {
+        return getJsonSetting(settingsMap, AppSettingKey.KOREADER_SYNC_SETTINGS, KoreaderSyncSettings.class, new KoreaderSyncSettings());
     }
 
     private AppSettings buildAppSettings() {
@@ -293,6 +289,7 @@ public class AppSettingService {
         builder.metadataPersistenceSettings(getJsonSetting(settingsMap, AppSettingKey.METADATA_PERSISTENCE_SETTINGS, MetadataPersistenceSettings.class, getDefaultMetadataPersistenceSettings()));
         builder.metadataPublicReviewsSettings(getJsonSetting(settingsMap, AppSettingKey.METADATA_PUBLIC_REVIEWS_SETTINGS, MetadataPublicReviewsSettings.class, getDefaultMetadataPublicReviewsSettings()));
         builder.koboSettings(getJsonSetting(settingsMap, AppSettingKey.KOBO_SETTINGS, KoboSettings.class, getDefaultKoboSettings()));
+        builder.koreaderSyncSettings(getKoreaderSyncSettings(settingsMap));
         builder.coverCroppingSettings(getJsonSetting(settingsMap, AppSettingKey.COVER_CROPPING_SETTINGS, CoverCroppingSettings.class, getDefaultCoverCroppingSettings()));
         builder.metadataProviderSpecificFields(getJsonSetting(settingsMap, AppSettingKey.METADATA_PROVIDER_SPECIFIC_FIELDS, MetadataProviderSpecificFields.class, getDefaultMetadataProviderSpecificFields()));
 

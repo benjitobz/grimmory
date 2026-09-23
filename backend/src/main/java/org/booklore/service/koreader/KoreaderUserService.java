@@ -5,12 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.booklore.config.security.service.AuthenticationService;
 import org.booklore.exception.ApiError;
 import org.booklore.mapper.KoreaderUserMapper;
+import org.booklore.model.dto.BookLoreUser;
 import org.booklore.model.dto.KoreaderUser;
 import org.booklore.model.entity.BookLoreUserEntity;
 import org.booklore.model.entity.KoreaderUserEntity;
 import org.booklore.repository.KoreaderUserRepository;
 import org.booklore.repository.UserRepository;
+import org.booklore.service.appsettings.AppSettingService;
 import org.booklore.util.Md5Util;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +28,16 @@ public class KoreaderUserService {
     private final UserRepository userRepository;
     private final KoreaderUserRepository koreaderUserRepository;
     private final KoreaderUserMapper koreaderUserMapper;
+    private final AppSettingService appSettingService;
 
     @Transactional
     public KoreaderUser upsertUser(String username, String rawPassword) {
-        Long ownerId = authService.getAuthenticatedUser().getId();
+        BookLoreUser actor = authService.getAuthenticatedUser();
+        if (appSettingService.getAppSettings().getKoreaderSyncSettings().isExternalServerEnabled()
+                && !actor.getPermissions().isAdmin()) {
+            throw new AccessDeniedException("KOReader sync credentials are managed by the administrator");
+        }
+        Long ownerId = actor.getId();
         BookLoreUserEntity owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> ApiError.USER_NOT_FOUND.createException(ownerId));
 

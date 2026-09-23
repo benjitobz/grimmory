@@ -192,6 +192,55 @@
         </div>
       </div>
     </div>
+
+    <div class="preferences-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="pi pi-mobile"></i>
+          {{ t('koreaderSync.sectionTitle') }}
+        </h3>
+      </div>
+
+      <div class="settings-card">
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label-row">
+              <span class="setting-label">{{ t('koreaderSync.useExternalLabel') }}</span>
+              <p-toggleswitch
+                [(ngModel)]="koreaderSyncSettings.externalServerEnabled"
+                (onChange)="onKoreaderSyncToggle($event.checked)">
+              </p-toggleswitch>
+            </div>
+            <p class="setting-description">
+              <i class="pi pi-info-circle"></i>
+              {{ t('koreaderSync.useExternalDesc') }}
+            </p>
+          </div>
+        </div>
+
+        @if (koreaderSyncSettings.externalServerEnabled) {
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label-row">
+                <span class="setting-label">{{ t('koreaderSync.serverUrlLabel') }}</span>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    pInputText
+                    [(ngModel)]="koreaderSyncSettings.externalServerUrl"
+                    [placeholder]="t('koreaderSync.serverUrlPlaceholder')"/>
+                  <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveKoreaderSync()"></p-button>
+                </div>
+              </div>
+              <p class="setting-description">
+                <i class="pi pi-info-circle"></i>
+                {{ t('koreaderSync.serverUrlDesc') }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
   </div>
 </div>
 </ng-container>

@@ -75,17 +75,20 @@ export class AppSettingsService {
 
   private syncPublicSettings(appSettings: AppSettings): void {
     const current = this.publicAppSettings();
+    const koreaderSync = appSettings.koreaderSyncSettings;
+    const externalUrl = koreaderSync?.externalServerEnabled ? (koreaderSync.externalServerUrl ?? '').trim() : '';
     const updatedPublicSettings: PublicAppSettings = {
       oidcEnabled: appSettings.oidcEnabled,
       remoteAuthEnabled: appSettings.remoteAuthEnabled,
       oidcProviderDetails: appSettings.oidcProviderDetails,
       oidcForceOnlyMode: appSettings.oidcForceOnlyMode,
-      koreaderSyncUrlOverride: current?.koreaderSyncUrlOverride ?? null
+      koreaderSyncUrlOverride: externalUrl || null
     };
 
     if (
       !current ||
       current.oidcEnabled !== updatedPublicSettings.oidcEnabled ||
+      (current.koreaderSyncUrlOverride ?? null) !== updatedPublicSettings.koreaderSyncUrlOverride ||
       current.remoteAuthEnabled !== updatedPublicSettings.remoteAuthEnabled ||
       current.oidcForceOnlyMode !== updatedPublicSettings.oidcForceOnlyMode ||
       JSON.stringify(current.oidcProviderDetails) !== JSON.stringify(updatedPublicSettings.oidcProviderDetails)
