@@ -16,7 +16,6 @@ Two small backend patches ride along (both default to upstream behaviour):
 | --- | --- | --- |
 | `develop` | hard mirror of upstream `develop` | force-pushed by the sync workflow |
 | `embedded-database` | upstream `develop` + patch + this automation. **Default branch.** | `git merge develop` |
-| `embedded-main` | newest upstream release tag + patch | `git merge v<x.y.z>` |
 
 `embedded-database` is the default branch because GitHub only runs `schedule:` workflows from
 the default branch, and `develop` is overwritten on every sync.
@@ -28,7 +27,9 @@ Published to `ghcr.io/benjitobz/grimmory`, `linux/amd64` only.
 | Tag | Source |
 | --- | --- |
 | `develop`, `develop-<sha>` | `embedded-database` |
-| `latest`, `<x.y.z>` | `embedded-main` |
+
+The release stream (`embedded-main`, `latest`, `<x.y.z>`) was retired on 2026-09-23; the
+`latest` and version tags still on GHCR predate that and carry neither backend patch.
 
 ## Required setup
 
