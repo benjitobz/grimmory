@@ -19,6 +19,11 @@ app:
     header-groups: ${REMOTE_AUTH_HEADER_GROUPS:Remote-Groups}
     admin-group: ${REMOTE_AUTH_ADMIN_GROUP}
     groups-delimiter: ${REMOTE_AUTH_GROUPS_DELIMITER:\\s+}
+
+  koreader:
+    # Shown to readers as the KOReader sync server instead of this instance's
+    # /api/koreader when an external sync server (e.g. BookBridge) is in use.
+    sync-url-override: ${KOREADER_SYNC_URL_OVERRIDE:}
   disk-type: ${DISK_TYPE:LOCAL}
 
   oidc:

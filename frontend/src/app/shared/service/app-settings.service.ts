@@ -13,6 +13,7 @@ export interface PublicAppSettings {
   remoteAuthEnabled: boolean;
   oidcProviderDetails: OidcProviderDetails;
   oidcForceOnlyMode: boolean;
+  koreaderSyncUrlOverride?: string | null;
 }
 
 @Injectable({providedIn: 'root'})
@@ -73,13 +74,14 @@ export class AppSettingsService {
   }
 
   private syncPublicSettings(appSettings: AppSettings): void {
+    const current = this.publicAppSettings();
     const updatedPublicSettings: PublicAppSettings = {
       oidcEnabled: appSettings.oidcEnabled,
       remoteAuthEnabled: appSettings.remoteAuthEnabled,
       oidcProviderDetails: appSettings.oidcProviderDetails,
-      oidcForceOnlyMode: appSettings.oidcForceOnlyMode
+      oidcForceOnlyMode: appSettings.oidcForceOnlyMode,
+      koreaderSyncUrlOverride: current?.koreaderSyncUrlOverride ?? null
     };
-    const current = this.publicAppSettings();
 
     if (
       !current ||

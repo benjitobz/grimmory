@@ -28,6 +28,7 @@
 
         <div class="settings-card">
           <form #koreaderForm="ngForm">
+            @if (!externalSyncUrl()) {
             <div class="setting-item">
               <div class="setting-info">
                 <div class="setting-label-row">
@@ -62,6 +63,7 @@
                 </p>
               </div>
             </div>
+            }
 
             <div class="setting-item">
               <div class="setting-info">
@@ -71,7 +73,7 @@
                     <input
                       pInputText
                       id="koreaderEndpoint"
-                      [value]="koreaderEndpoint"
+                      [value]="koreaderEndpoint()"
                       readonly
                       class="token-input"/>
                     <p-button
@@ -79,8 +81,8 @@
                       outlined="true"
                       severity="info"
                       size="small"
-                      (onClick)="copyText(koreaderEndpoint, 'API Path')"
-                      [disabled]="!koreaderEndpoint">
+                      (onClick)="copyText(koreaderEndpoint(), 'API Path')"
+                      [disabled]="!koreaderEndpoint()">
                     </p-button>
                   </div>
                 </div>

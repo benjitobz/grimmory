@@ -264,8 +264,17 @@ public class AppSettingService {
         builder.oidcForceOnlyMode(oidcForceOnlyMode);
 
         builder.oidcProviderDetails(details);
+        builder.koreaderSyncUrlOverride(koreaderSyncUrlOverride());
 
         return builder.build();
+    }
+
+    private String koreaderSyncUrlOverride() {
+        AppProperties.Koreader koreader = appProperties.getKoreader();
+        if (koreader == null || koreader.getSyncUrlOverride() == null || koreader.getSyncUrlOverride().isBlank()) {
+            return null;
+        }
+        return koreader.getSyncUrlOverride().trim();
     }
 
     private AppSettings buildAppSettings() {

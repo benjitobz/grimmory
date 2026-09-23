@@ -16,6 +16,7 @@ public class AppProperties {
     private RemoteAuth remoteAuth;
     private OutboundRequests outbound;
     private OIDC oidc;
+    private Koreader koreader;
 
     /**
      * Type of disk storage where library files are stored.
@@ -27,6 +28,12 @@ public class AppProperties {
 
     public boolean isLocalStorage() {
         return "LOCAL".equalsIgnoreCase(diskType);
+    }
+
+    @Getter
+    @Setter
+    public static class Koreader {
+        private String syncUrlOverride;
     }
 
     @Getter
