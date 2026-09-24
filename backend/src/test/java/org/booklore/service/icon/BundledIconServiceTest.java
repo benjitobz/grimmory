@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +27,7 @@ class BundledIconServiceTest {
     @BeforeEach
     void setUp() {
         iconDir = dataDir.resolve("icons").resolve("svg");
-        when(fileService.getIconsSvgFolder()).thenReturn(iconDir.toString());
+        lenient().when(fileService.getIconsSvgFolder()).thenReturn(iconDir.toString());
         service = new BundledIconService(fileService);
     }
 
