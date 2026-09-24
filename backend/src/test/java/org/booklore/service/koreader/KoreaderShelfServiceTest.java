@@ -66,7 +66,7 @@ class KoreaderShelfServiceTest {
         ArgumentCaptor<ShelfEntity> saved = ArgumentCaptor.forClass(ShelfEntity.class);
         verify(shelfRepository).save(saved.capture());
         assertEquals("KOReader", saved.getValue().getName());
-        assertEquals(KoreaderShelfService.SHELF_ICON, saved.getValue().getIcon());
+        assertEquals("koreader-icon", saved.getValue().getIcon());
         assertEquals(IconType.CUSTOM_SVG, saved.getValue().getIconType());
         assertFalse(saved.getValue().isPublic());
         assertEquals(7L, saved.getValue().getUser().getId());

@@ -8,7 +8,6 @@ import org.booklore.model.dto.Shelf;
 import org.booklore.model.dto.request.ShelfCreateRequest;
 import org.booklore.model.entity.KoboUserSettingsEntity;
 import org.booklore.model.entity.ShelfEntity;
-import org.booklore.model.enums.IconType;
 import org.booklore.model.enums.ShelfType;
 import org.booklore.repository.KoboUserSettingsRepository;
 import org.booklore.service.ShelfService;
@@ -107,7 +106,7 @@ public class KoboSettingsService {
                     ShelfCreateRequest.builder()
                             .name(ShelfType.KOBO.getName())
                             .icon(ShelfType.KOBO.getIcon())
-                            .iconType(IconType.LUCIDE)
+                            .iconType(ShelfType.KOBO.getIconType())
                             .build()
             );
         }
