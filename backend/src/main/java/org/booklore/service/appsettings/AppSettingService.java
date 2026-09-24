@@ -17,8 +17,10 @@ import org.booklore.model.entity.AppSettingEntity;
 import org.booklore.model.enums.AuditAction;
 import org.booklore.model.enums.PermissionType;
 import org.booklore.service.audit.AuditService;
+import org.booklore.service.koreader.KoreaderSyncSettingsChangedEvent;
 import org.booklore.util.UserPermissionUtils;
 import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -50,18 +52,20 @@ public class AppSettingService {
     private final ObjectMapper objectMapper;
     private final AuthenticationService authenticationService;
     private final AuditService auditService;
+    private final ApplicationEventPublisher eventPublisher;
 
     private final Cache<AppSettingKey, Optional<String>> cachedSettings = Caffeine.newBuilder()
             .maximumSize(100)
             .expireAfterWrite(Duration.ofHours(24))
             .build();
 
-    public AppSettingService(AppProperties appProperties, AppSettingsRepository appSettingsRepository, ObjectMapper objectMapper, @Lazy AuthenticationService authenticationService, @Lazy AuditService auditService) {
+    public AppSettingService(AppProperties appProperties, AppSettingsRepository appSettingsRepository, ObjectMapper objectMapper, @Lazy AuthenticationService authenticationService, @Lazy AuditService auditService, ApplicationEventPublisher eventPublisher) {
         this.appProperties = appProperties;
         this.appSettingsRepository = appSettingsRepository;
         this.objectMapper = objectMapper;
         this.authenticationService = authenticationService;
         this.auditService = auditService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -79,6 +83,7 @@ public class AppSettingService {
         }
 
         var setting = appSettingsRepository.findByName(key.toString());
+        String previousValue = setting == null ? null : setting.getVal();
 
         if (setting == null) {
             setting = new AppSettingEntity();
@@ -103,6 +108,23 @@ public class AppSettingService {
             default -> AuditAction.SETTINGS_UPDATED;
         };
         auditService.log(action, "Updated setting: " + key);
+
+        if (key == AppSettingKey.KOREADER_SYNC_SETTINGS) {
+            KoreaderSyncSettings after = val == null ? new KoreaderSyncSettings() : objectMapper.convertValue(val, KoreaderSyncSettings.class);
+            eventPublisher.publishEvent(new KoreaderSyncSettingsChangedEvent(parseKoreaderSyncSettings(previousValue), after));
+        }
+    }
+
+    private KoreaderSyncSettings parseKoreaderSyncSettings(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return new KoreaderSyncSettings();
+        }
+        try {
+            return objectMapper.readValue(raw, KoreaderSyncSettings.class);
+        } catch (Exception e) {
+            log.warn("Stored KOReader sync settings are unreadable; treating them as defaults", e);
+            return new KoreaderSyncSettings();
+        }
     }
 
     private void validateOidcForceOnlyMode(Object val) {

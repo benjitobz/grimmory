@@ -152,6 +152,7 @@ export interface PublicReviewSettings {
 export interface KoreaderSyncSettings {
   externalServerEnabled: boolean;
   externalServerUrl: string;
+  shelfName: string;
 }
 
 export interface KoboSettings {

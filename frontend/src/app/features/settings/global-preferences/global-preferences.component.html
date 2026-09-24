@@ -238,6 +238,25 @@
               </p>
             </div>
           </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label-row">
+                <span class="setting-label">{{ t('koreaderSync.shelfNameLabel') }}</span>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    pInputText
+                    [(ngModel)]="koreaderSyncSettings.shelfName"
+                    [placeholder]="t('koreaderSync.shelfNamePlaceholder')"/>
+                  <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveKoreaderSync()"></p-button>
+                </div>
+              </div>
+              <p class="setting-description">
+                <i class="pi pi-info-circle"></i>
+                {{ t('koreaderSync.shelfNameDesc') }}
+              </p>
+            </div>
+          </div>
         }
       </div>
     </div>

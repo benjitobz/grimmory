@@ -45,7 +45,8 @@ export class GlobalPreferencesComponent implements OnInit {
 
   koreaderSyncSettings: KoreaderSyncSettings = {
     externalServerEnabled: false,
-    externalServerUrl: ''
+    externalServerUrl: '',
+    shelfName: 'KOReader'
   };
 
   private appSettingsService = inject(AppSettingsService);
@@ -116,6 +117,7 @@ export class GlobalPreferencesComponent implements OnInit {
       return;
     }
     this.koreaderSyncSettings.externalServerUrl = url;
+    this.koreaderSyncSettings.shelfName = (this.koreaderSyncSettings.shelfName ?? '').trim() || 'KOReader';
     this.saveSetting(AppSettingKey.KOREADER_SYNC_SETTINGS, this.koreaderSyncSettings);
   }
 

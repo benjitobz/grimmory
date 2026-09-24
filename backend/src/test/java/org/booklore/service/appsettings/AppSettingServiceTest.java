@@ -7,7 +7,10 @@ import org.booklore.model.dto.settings.AppSettingKey;
 import org.booklore.model.entity.AppSettingEntity;
 import org.booklore.model.enums.AuditAction;
 import org.booklore.repository.AppSettingsRepository;
+import org.booklore.model.dto.settings.KoreaderSyncSettings;
 import org.booklore.service.audit.AuditService;
+import org.booklore.service.koreader.KoreaderSyncSettingsChangedEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,7 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,6 +46,8 @@ class AppSettingServiceTest {
     private AppSettingsRepository appSettingsRepository;
     @Spy
     private ObjectMapper objectMapper = JsonMapper.shared();
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     private AppSettingService appSettingService;
@@ -59,6 +65,32 @@ class AppSettingServiceTest {
                     .build();
 
             when(authenticationService.getAuthenticatedUser()).thenReturn(user);
+        }
+
+        @Test
+        void updateSetting_publishesKoreaderSyncSettingsChange() throws Exception {
+            AppSettingEntity stored = new AppSettingEntity();
+            stored.setName(AppSettingKey.KOREADER_SYNC_SETTINGS.toString());
+            stored.setVal("{\"externalServerEnabled\":false,\"externalServerUrl\":\"\"}");
+            when(appSettingsRepository.findByName(AppSettingKey.KOREADER_SYNC_SETTINGS.toString())).thenReturn(stored);
+
+            appSettingService.updateSetting(AppSettingKey.KOREADER_SYNC_SETTINGS,
+                    Map.of("externalServerEnabled", true, "externalServerUrl", "https://sync.example", "shelfName", " Devices "));
+
+            ArgumentCaptor<KoreaderSyncSettingsChangedEvent> eventCaptor = ArgumentCaptor.forClass(KoreaderSyncSettingsChangedEvent.class);
+            verify(eventPublisher).publishEvent(eventCaptor.capture());
+            KoreaderSyncSettingsChangedEvent event = eventCaptor.getValue();
+            assertThat(event.before().isExternalServerEnabled()).isFalse();
+            assertThat(event.before().effectiveShelfName()).isEqualTo(KoreaderSyncSettings.DEFAULT_SHELF_NAME);
+            assertThat(event.after().isExternalServerEnabled()).isTrue();
+            assertThat(event.after().effectiveShelfName()).isEqualTo("Devices");
+        }
+
+        @Test
+        void updateSetting_doesNotPublishForOtherKeys() throws Exception {
+            appSettingService.updateSetting(AppSettingKey.AUTO_BOOK_SEARCH, true);
+
+            verify(eventPublisher, never()).publishEvent(any());
         }
 
         @Test
