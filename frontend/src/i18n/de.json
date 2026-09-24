@@ -838,7 +838,10 @@
       "serverUrlLabel": "BookBridge sync server URL",
       "serverUrlPlaceholder": "https://booksync.example.com",
       "serverUrlDesc": "What readers enter as the sync server in KOReader and in the Bridge Sync plugin.",
-      "invalidUrl": "Enter the BookBridge server as a full http(s) URL."
+      "invalidUrl": "Enter the BookBridge server as a full http(s) URL.",
+      "shelfNameLabel": "KOReader shelf name",
+      "shelfNamePlaceholder": "KOReader",
+      "shelfNameDesc": "Every reader gets a shelf with this name while BookBridge sync is on, and BookBridge delivers the books on it to KOReader. Renaming moves the existing shelves; turning BookBridge sync off removes them."
     },
     "settingsSaved": "Einstellungen gespeichert",
     "settingsSavedDetail": "Die Einstellungen wurden erfolgreich gespeichert!",
