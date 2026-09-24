@@ -9,6 +9,7 @@ Two small backend patches ride along (both default to upstream behaviour):
 | --- | --- | --- |
 | `KOBO_SHELF_NAME` env var picks the shelf the native Kobo sync ships (default `Kobo`) | `backend/.../model/enums/ShelfType.java` | the shelf is called "Kobo OS" on the media server |
 | admins may assign/unassign books on public shelves they do not own | `backend/.../service/book/BookUpdateService.java` (+ tests) | BookBridge files paired ebooks on one shared public shelf under more than one login |
+| admin setting `KOREADER_SYNC_SETTINGS` (Applications page: "Use BookBridge for KOReader sync" + URL, stored in `app_settings`, no migration): the KOReader device page shows that server, keeps the reader's login read-only and hides the built-in toggles; `PUT /api/v1/koreader-users/me` is refused for non-admins while it is on | `AppSettingKey`, `KoreaderSyncSettings`, `AppSettings`, `AppSettingService`, `KoreaderUserService`, `app-settings.*`, `global-preferences.component.*`, `koreader-settings-component.html`, `i18n/*.json` | readers get their KOReader/BookBridge sync details from Grimmory; provisioning issues the sync codes and BookBridge mirrors them |
 
 ## Branches
 

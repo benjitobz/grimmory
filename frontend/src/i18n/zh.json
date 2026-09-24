@@ -831,6 +831,15 @@
       "invalidInput": "无效输入",
       "invalidInputDetail": "请输入有效的最大文件上传大小（以 MB 为单位）。"
     },
+    "koreaderSync": {
+      "sectionTitle": "KOReader Sync",
+      "useExternalLabel": "Use BookBridge for KOReader sync",
+      "useExternalDesc": "Readers sync through BookBridge instead of this server. Their KOReader page shows the server below with read-only username and password, and the built-in sync toggles are hidden.",
+      "serverUrlLabel": "BookBridge sync server URL",
+      "serverUrlPlaceholder": "https://booksync.example.com",
+      "serverUrlDesc": "What readers enter as the sync server in KOReader and in the Bridge Sync plugin.",
+      "invalidUrl": "Enter the BookBridge server as a full http(s) URL."
+    },
     "settingsSaved": "设置已保存",
     "settingsSavedDetail": "设置已成功保存！",
     "settingsError": "保存设置时出错。"

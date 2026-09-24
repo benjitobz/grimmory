@@ -831,6 +831,15 @@
       "invalidInput": "Input non valido",
       "invalidInputDetail": "Inserisci una dimensione massima valida per il caricamento file in MB."
     },
+    "koreaderSync": {
+      "sectionTitle": "KOReader Sync",
+      "useExternalLabel": "Use BookBridge for KOReader sync",
+      "useExternalDesc": "Readers sync through BookBridge instead of this server. Their KOReader page shows the server below with read-only username and password, and the built-in sync toggles are hidden.",
+      "serverUrlLabel": "BookBridge sync server URL",
+      "serverUrlPlaceholder": "https://booksync.example.com",
+      "serverUrlDesc": "What readers enter as the sync server in KOReader and in the Bridge Sync plugin.",
+      "invalidUrl": "Enter the BookBridge server as a full http(s) URL."
+    },
     "settingsSaved": "Impostazioni salvate",
     "settingsSavedDetail": "Le impostazioni sono state salvate con successo!",
     "settingsError": "Si è verificato un errore durante il salvataggio delle impostazioni."

@@ -8,7 +8,7 @@ import {ToggleSwitch} from '@openng/optimus-ui/toggleswitch';
 
 import {AppSettingsService} from '../../../shared/service/app-settings.service';
 import {BookMetadataManageService} from '../../book/service/book-metadata-manage.service';
-import {AppSettingKey, CoverCroppingSettings} from '../../../shared/model/app-settings.model';
+import {AppSettingKey, CoverCroppingSettings, KoreaderSyncSettings} from '../../../shared/model/app-settings.model';
 import {InputText} from '@openng/optimus-ui/inputtext';
 import {Slider} from '@openng/optimus-ui/slider';
 import {TranslocoDirective, TranslocoPipe, TranslocoService} from '@jsverse/transloco';
@@ -43,6 +43,11 @@ export class GlobalPreferencesComponent implements OnInit {
     smartCroppingEnabled: false
   };
 
+  koreaderSyncSettings: KoreaderSyncSettings = {
+    externalServerEnabled: false,
+    externalServerUrl: ''
+  };
+
   private appSettingsService = inject(AppSettingsService);
   private bookMetadataManageService = inject(BookMetadataManageService);
   private messageService = inject(MessageService);
@@ -60,6 +65,9 @@ export class GlobalPreferencesComponent implements OnInit {
     }
     if (settings.coverCroppingSettings) {
       this.coverCroppingSettings = {...settings.coverCroppingSettings};
+    }
+    if (settings.koreaderSyncSettings) {
+      this.koreaderSyncSettings = {...settings.koreaderSyncSettings};
     }
     this.toggles.autoBookSearch = settings.autoBookSearch ?? false;
     this.toggles.similarBookRecommendation = settings.similarBookRecommendation ?? false;
@@ -94,6 +102,21 @@ export class GlobalPreferencesComponent implements OnInit {
 
   onCoverCroppingChange(): void {
     this.saveSetting(AppSettingKey.COVER_CROPPING_SETTINGS, this.coverCroppingSettings);
+  }
+
+  onKoreaderSyncToggle(checked: boolean): void {
+    this.koreaderSyncSettings.externalServerEnabled = checked;
+    this.saveKoreaderSync();
+  }
+
+  saveKoreaderSync(): void {
+    const url = (this.koreaderSyncSettings.externalServerUrl ?? '').trim();
+    if (this.koreaderSyncSettings.externalServerEnabled && !/^https?:\/\/\S+$/.test(url)) {
+      this.showMessage('error', this.t.translate('common.error'), this.t.translate('settingsApp.koreaderSync.invalidUrl'));
+      return;
+    }
+    this.koreaderSyncSettings.externalServerUrl = url;
+    this.saveSetting(AppSettingKey.KOREADER_SYNC_SETTINGS, this.koreaderSyncSettings);
   }
 
   saveFileSize() {

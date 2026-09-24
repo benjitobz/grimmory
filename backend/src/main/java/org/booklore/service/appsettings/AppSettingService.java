@@ -302,6 +302,8 @@ public class AppSettingService {
         builder.oidcForceOnlyMode(oidcForceOnlyMode);
 
         builder.oidcProviderDetails(details);
+        KoreaderSyncSettings koreaderSync = getJsonSetting(null, settingsMap, AppSettingKey.KOREADER_SYNC_SETTINGS, KoreaderSyncSettings.class, new KoreaderSyncSettings());
+        builder.koreaderSyncUrlOverride(koreaderSync == null ? null : koreaderSync.effectiveExternalServerUrl());
 
         return builder.build();
     }
@@ -332,6 +334,7 @@ public class AppSettingService {
         builder.metadataPersistenceSettings(getJsonSetting(permissions, settingsMap, AppSettingKey.METADATA_PERSISTENCE_SETTINGS, MetadataPersistenceSettings.class, getDefaultMetadataPersistenceSettings()));
         builder.metadataPublicReviewsSettings(getJsonSetting(permissions, settingsMap, AppSettingKey.METADATA_PUBLIC_REVIEWS_SETTINGS, MetadataPublicReviewsSettings.class, getDefaultMetadataPublicReviewsSettings()));
         builder.koboSettings(getJsonSetting(permissions, settingsMap, AppSettingKey.KOBO_SETTINGS, KoboSettings.class, getDefaultKoboSettings()));
+        builder.koreaderSyncSettings(getJsonSetting(permissions, settingsMap, AppSettingKey.KOREADER_SYNC_SETTINGS, KoreaderSyncSettings.class, new KoreaderSyncSettings()));
         builder.coverCroppingSettings(getJsonSetting(permissions, settingsMap, AppSettingKey.COVER_CROPPING_SETTINGS, CoverCroppingSettings.class, getDefaultCoverCroppingSettings()));
         builder.metadataProviderSpecificFields(getJsonSetting(permissions, settingsMap, AppSettingKey.METADATA_PROVIDER_SPECIFIC_FIELDS, MetadataProviderSpecificFields.class, getDefaultMetadataProviderSpecificFields()));
 
