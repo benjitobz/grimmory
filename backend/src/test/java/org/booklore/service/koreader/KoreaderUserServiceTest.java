@@ -48,8 +48,8 @@ class KoreaderUserServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(authService.getAuthenticatedUser()).thenReturn(actor);
-        when(actor.getId()).thenReturn(7L);
+        lenient().when(authService.getAuthenticatedUser()).thenReturn(actor);
+        lenient().when(actor.getId()).thenReturn(7L);
     }
 
     @Test
