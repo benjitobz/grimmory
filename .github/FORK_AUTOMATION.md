@@ -29,6 +29,10 @@ Published to `ghcr.io/benjitobz/grimmory`, `linux/amd64` only.
 | --- | --- |
 | `develop`, `develop-<sha>` | `embedded-database` |
 
+`embedded-database` is built by the sync workflow when the upstream merge changed it, on a
+manual run with `force_build`, and on every push made by a person (the workflow's own merge
+pushes are skipped so they are not built twice).
+
 The release stream (`embedded-main`, `latest`, `<x.y.z>`) was retired on 2026-09-23; the
 `latest` and version tags still on GHCR predate that and carry neither backend patch.
 
