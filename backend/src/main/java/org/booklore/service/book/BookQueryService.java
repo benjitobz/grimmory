@@ -8,6 +8,7 @@ import org.booklore.model.dto.BookMetadata;
 import org.booklore.model.dto.BookRecommendationLite;
 import org.booklore.model.dto.ComicMetadata;
 import org.booklore.model.entity.BookEntity;
+import org.booklore.model.entity.BookMetadataEntity;
 import org.booklore.repository.BookRepository;
 import org.booklore.repository.UserContentRestrictionRepository;
 import org.booklore.security.policy.ContentRestrictionSpecification;
@@ -176,19 +177,20 @@ public class BookQueryService {
         }
 
         if (stripForListView) {
-            stripFieldsForListView(dto);
+            stripFieldsForListView(dto, bookEntity);
         }
 
         return dto;
     }
 
-    private void stripFieldsForListView(Book dto) {
+    private void stripFieldsForListView(Book dto, BookEntity bookEntity) {
         dto.setLibraryPath(null);
 
         BookMetadata m = dto.getMetadata();
         if (m != null) {
             // Compute allMetadataLocked before stripping lock flags
-            m.setAllMetadataLocked(computeAllMetadataLocked(m));
+            BookMetadataEntity metadataEntity = bookEntity.getMetadata();
+            m.setAllMetadataLocked(metadataEntity != null && metadataEntity.areAllFieldsLocked());
 
             // Strip lock flags
             m.setTitleLocked(null);
@@ -332,38 +334,5 @@ public class BookQueryService {
         // Strip empty book-level collections
         if (dto.getAlternativeFormats() != null && dto.getAlternativeFormats().isEmpty()) dto.setAlternativeFormats(null);
         if (dto.getSupplementaryFiles() != null && dto.getSupplementaryFiles().isEmpty()) dto.setSupplementaryFiles(null);
-    }
-
-    private boolean computeAllMetadataLocked(BookMetadata m) {
-        Boolean[] bookLocks = {
-                m.getTitleLocked(), m.getSubtitleLocked(), m.getPublisherLocked(),
-                m.getPublishedDateLocked(), m.getDescriptionLocked(), m.getSeriesNameLocked(),
-                m.getSeriesNumberLocked(), m.getSeriesTotalLocked(), m.getIsbn13Locked(),
-                m.getIsbn10Locked(), m.getOpenlibraryIdLocked(), m.getAsinLocked(), m.getGoodreadsIdLocked(),
-                m.getComicvineIdLocked(), m.getHardcoverIdLocked(), m.getHardcoverBookIdLocked(),
-                m.getDoubanIdLocked(), m.getGoogleIdLocked(), m.getPageCountLocked(),
-                m.getLanguageLocked(), m.getAmazonRatingLocked(), m.getAmazonReviewCountLocked(),
-                m.getGoodreadsRatingLocked(), m.getGoodreadsReviewCountLocked(),
-                m.getHardcoverRatingLocked(), m.getHardcoverReviewCountLocked(),
-                m.getDoubanRatingLocked(), m.getDoubanReviewCountLocked(),
-                m.getLubimyczytacIdLocked(), m.getLubimyczytacRatingLocked(),
-                m.getRanobedbIdLocked(), m.getRanobedbRatingLocked(),
-                m.getAudibleIdLocked(), m.getAudibleRatingLocked(), m.getAudibleReviewCountLocked(),
-                m.getApplebooksIdLocked(), m.getApplebooksRatingLocked(), m.getApplebooksReviewCountLocked(),
-                m.getExternalUrlLocked(), m.getCoverLocked(), m.getAudiobookCoverLocked(),
-                m.getAuthorsLocked(), m.getCategoriesLocked(), m.getMoodsLocked(),
-                m.getTagsLocked(), m.getReviewsLocked(), m.getNarratorLocked(),
-                m.getAbridgedLocked(), m.getAgeRatingLocked(), m.getContentRatingLocked()
-        };
-
-        boolean hasAnyLock = false;
-        for (Boolean lock : bookLocks) {
-            if (Boolean.TRUE.equals(lock)) {
-                hasAnyLock = true;
-            } else {
-                return false;
-            }
-        }
-        return hasAnyLock;
     }
 }

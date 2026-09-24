@@ -41,13 +41,11 @@ export class CoverSearchComponent {
   private readonly t = inject(TranslocoService);
 
   private readonly bookId: number = this.dynamicDialogConfig.data.bookId;
-  private readonly book = this.bookService.findBookById(this.bookId);
   readonly searchForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
     author: ['']
   });
-  readonly coverType: 'ebook' | 'audiobook' = this.dynamicDialogConfig.data.coverType ??
-    (this.book?.primaryFile?.bookType === 'AUDIOBOOK' ? 'audiobook' : 'ebook');
+  coverType: 'ebook' | 'audiobook' = this.dynamicDialogConfig.data.coverType ?? 'ebook';
   private readonly search = signal<CoverSearchParams | null>(null);
   private readonly query = injectQuery(() => ({
     ...this.sources.coverSearch(this.search() ?? NO_SEARCH),
@@ -60,16 +58,20 @@ export class CoverSearchComponent {
   readonly hasSearched = computed(() => this.search() !== null);
 
   constructor() {
-    if (this.book) {
+    const explicitCoverType = this.dynamicDialogConfig.data.coverType;
+    this.bookService.ensureBookDetail(this.bookId, true).then(book => {
+      if (!explicitCoverType && book.primaryFile?.bookType === 'AUDIOBOOK') {
+        this.coverType = 'audiobook';
+      }
       this.searchForm.patchValue({
-        title: this.book.metadata?.title || '',
-        author: this.book.metadata?.authors?.[0] ?? ''
+        title: book.metadata?.title || '',
+        author: book.metadata?.authors?.[0] ?? ''
       });
 
       if (this.searchForm.valid) {
         this.onSearch();
       }
-    }
+    });
   }
 
   onSearch() {

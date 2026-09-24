@@ -29,4 +29,3 @@ describe('normalizeLocalSearchTerm', () => {
     expect(normalizeLocalSearchTerm(' \t ')).toBe('');
   });
 });
-
