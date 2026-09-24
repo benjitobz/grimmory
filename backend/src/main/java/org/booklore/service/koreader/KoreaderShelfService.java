@@ -9,8 +9,10 @@ import org.booklore.model.enums.IconType;
 import org.booklore.repository.ShelfRepository;
 import org.booklore.repository.UserRepository;
 import org.booklore.service.appsettings.AppSettingService;
+import org.booklore.service.icon.BundledIconService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,7 @@ import java.util.List;
 @Slf4j
 public class KoreaderShelfService {
 
-    static final String SHELF_ICON = "koreader-icon";
+    static final String SHELF_ICON = BundledIconService.KOREADER_ICON;
 
     private final ShelfRepository shelfRepository;
     private final UserRepository userRepository;
@@ -36,6 +38,7 @@ public class KoreaderShelfService {
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
+    @Order(1)
     public void reconcileOnStartup() {
         KoreaderSyncSettings settings = currentSettings();
         if (settings.isExternalServerEnabled()) {
