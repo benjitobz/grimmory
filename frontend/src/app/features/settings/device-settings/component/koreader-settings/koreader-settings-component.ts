@@ -38,6 +38,8 @@ export class KoreaderSettingsComponent {
   koReaderUsername = signal('');
   koReaderPassword = signal('');
   credentialsSaved = signal(false);
+  rotating = signal(false);
+  rotated = signal(false);
 
   private readonly appSettingsService = inject(AppSettingsService);
   readonly externalSyncUrl = computed(() => this.appSettingsService.publicAppSettings()?.koreaderSyncUrlOverride?.trim() || null);
@@ -146,6 +148,37 @@ export class KoreaderSettingsComponent {
 
   toggleShowPassword() {
     this.showPassword.update(showPassword => !showPassword);
+  }
+
+  rotatePassword() {
+    if (this.rotating()) {
+      return;
+    }
+    this.rotating.set(true);
+    this.koreaderService.rotatePassword()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: koreaderUser => {
+          this.koReaderUsername.set(koreaderUser.username);
+          this.koReaderPassword.set(koreaderUser.password);
+          this.credentialsSaved.set(true);
+          this.rotated.set(true);
+          this.rotating.set(false);
+          this.messageService.add({
+            severity: 'success',
+            summary: this.t.translate('settingsDevice.koreader.rotated'),
+            detail: this.t.translate('settingsDevice.koreader.rotatedDetail')
+          });
+        },
+        error: () => {
+          this.rotating.set(false);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.t.translate('common.error'),
+            detail: this.t.translate('settingsDevice.koreader.rotateError')
+          });
+        }
+      });
   }
 
 

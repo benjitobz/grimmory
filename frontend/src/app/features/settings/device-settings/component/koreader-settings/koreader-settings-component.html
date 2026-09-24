@@ -178,6 +178,33 @@
               </div>
             </div>
 
+            @if (externalSyncUrl()) {
+            <div class="setting-item">
+              <div class="setting-info">
+                <div class="setting-label-row">
+                  <span class="setting-label">{{ t('koreader.rotatePassword') }}</span>
+                  <p-button
+                    icon="pi pi-refresh"
+                    outlined="true"
+                    severity="warn"
+                    size="small"
+                    [label]="t('koreader.rotatePasswordBtn')"
+                    (onClick)="rotatePassword()"
+                    [disabled]="rotating()">
+                  </p-button>
+                </div>
+                <p class="setting-description">
+                  {{ t('koreader.rotatePasswordDesc') }}
+                </p>
+                @if (rotated()) {
+                  <small class="help-text">
+                    {{ t('koreader.rotatedPropagation') }}
+                  </small>
+                }
+              </div>
+            </div>
+            }
+
             @if (!externalSyncUrl()) {
             <div class="setting-item">
               <div class="setting-info">

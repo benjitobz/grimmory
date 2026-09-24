@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 
 @Slf4j
@@ -30,11 +31,71 @@ public class KoreaderUserService {
     private final KoreaderUserMapper koreaderUserMapper;
     private final AppSettingService appSettingService;
 
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final String SYNC_CODE_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int SYNC_CODE_LENGTH = 12;
+
+    static String generateSyncCode() {
+        while (true) {
+            StringBuilder code = new StringBuilder(SYNC_CODE_LENGTH);
+            for (int i = 0; i < SYNC_CODE_LENGTH; i++) {
+                code.append(SYNC_CODE_ALPHABET.charAt(RANDOM.nextInt(SYNC_CODE_ALPHABET.length())));
+            }
+            String value = code.toString();
+            if (value.chars().anyMatch(Character::isDigit) && value.chars().anyMatch(Character::isLetter)) {
+                return value;
+            }
+        }
+    }
+
+    private boolean externalServerEnabled() {
+        return appSettingService.getAppSettings().getKoreaderSyncSettings().isExternalServerEnabled();
+    }
+
+    private KoreaderUserEntity initialiseManagedLogin(BookLoreUser actor) {
+        BookLoreUserEntity owner = userRepository.findById(actor.getId())
+                .orElseThrow(() -> ApiError.USER_NOT_FOUND.createException(actor.getId()));
+        String username = actor.getEmail() != null && !actor.getEmail().isBlank()
+                ? actor.getEmail().trim() : actor.getUsername();
+        if (koreaderUserRepository.findByUsername(username).isPresent()) {
+            username = username + "-" + actor.getId();
+        }
+        String code = generateSyncCode();
+        KoreaderUserEntity user = new KoreaderUserEntity();
+        user.setBookLoreUser(owner);
+        user.setUsername(username);
+        user.setPassword(code);
+        user.setPasswordMD5(Md5Util.md5Hex(code));
+        user.setSyncEnabled(true);
+        KoreaderUserEntity saved = koreaderUserRepository.save(user);
+        log.info("Initialised managed KOReader sync login [id={}, username='{}'] for BookLoreUser='{}'",
+                saved.getId(), saved.getUsername(), actor.getUsername());
+        return saved;
+    }
+
+    @Transactional
+    public KoreaderUser rotatePassword() {
+        BookLoreUser actor = authService.getAuthenticatedUser();
+        KoreaderUserEntity user = koreaderUserRepository.findByBookLoreUserId(actor.getId())
+                .orElseGet(() -> {
+                    if (!externalServerEnabled()) {
+                        throw ApiError.GENERIC_NOT_FOUND.createException("Koreader user not found for BookLore user ID: " + actor.getId());
+                    }
+                    return initialiseManagedLogin(actor);
+                });
+        String code = generateSyncCode();
+        user.setPassword(code);
+        user.setPasswordMD5(Md5Util.md5Hex(code));
+        KoreaderUserEntity saved = koreaderUserRepository.save(user);
+        log.info("Rotated KOReader sync password [id={}, username='{}'] for BookLoreUser='{}'",
+                saved.getId(), saved.getUsername(), actor.getUsername());
+        return koreaderUserMapper.toDto(saved);
+    }
+
     @Transactional
     public KoreaderUser upsertUser(String username, String rawPassword) {
         BookLoreUser actor = authService.getAuthenticatedUser();
-        if (appSettingService.getAppSettings().getKoreaderSyncSettings().isExternalServerEnabled()
-                && !actor.getPermissions().isAdmin()) {
+        if (externalServerEnabled() && !actor.getPermissions().isAdmin()) {
             throw new AccessDeniedException("KOReader sync credentials are managed by the administrator");
         }
         Long ownerId = actor.getId();
@@ -63,11 +124,17 @@ public class KoreaderUserService {
         return koreaderUserMapper.toDto(saved);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public KoreaderUser getUser() {
-        Long id = authService.getAuthenticatedUser().getId();
+        BookLoreUser actor = authService.getAuthenticatedUser();
+        Long id = actor.getId();
         KoreaderUserEntity user = koreaderUserRepository.findByBookLoreUserId(id)
-                .orElseThrow(() -> ApiError.GENERIC_NOT_FOUND.createException("Koreader user not found for BookLore user ID: " + id));
+                .orElseGet(() -> {
+                    if (!externalServerEnabled()) {
+                        throw ApiError.GENERIC_NOT_FOUND.createException("Koreader user not found for BookLore user ID: " + id);
+                    }
+                    return initialiseManagedLogin(actor);
+                });
         return koreaderUserMapper.toDto(user);
     }
 
