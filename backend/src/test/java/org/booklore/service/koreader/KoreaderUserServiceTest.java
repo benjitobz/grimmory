@@ -71,7 +71,7 @@ class KoreaderUserServiceTest {
         when(koreaderUserRepository.findByUsername("reader@example.com")).thenReturn(Optional.empty());
         when(userRepository.findById(7L)).thenReturn(Optional.of(new BookLoreUserEntity()));
         when(koreaderUserRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-        when(koreaderUserMapper.toDto(any())).thenReturn(new KoreaderUser());
+        when(koreaderUserMapper.toDto(any())).thenReturn(mock(KoreaderUser.class));
 
         service.getUser();
 
@@ -98,7 +98,7 @@ class KoreaderUserServiceTest {
         existing.setUsername("reader@example.com");
         existing.setPassword("abc123abc123");
         when(koreaderUserRepository.findByBookLoreUserId(7L)).thenReturn(Optional.of(existing));
-        when(koreaderUserMapper.toDto(existing)).thenReturn(new KoreaderUser());
+        when(koreaderUserMapper.toDto(existing)).thenReturn(mock(KoreaderUser.class));
 
         service.getUser();
 
@@ -114,7 +114,7 @@ class KoreaderUserServiceTest {
         existing.setPasswordMD5(Md5Util.md5Hex("abc123abc123"));
         when(koreaderUserRepository.findByBookLoreUserId(7L)).thenReturn(Optional.of(existing));
         when(koreaderUserRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-        when(koreaderUserMapper.toDto(any())).thenReturn(new KoreaderUser());
+        when(koreaderUserMapper.toDto(any())).thenReturn(mock(KoreaderUser.class));
 
         service.rotatePassword();
 
@@ -133,7 +133,7 @@ class KoreaderUserServiceTest {
         when(koreaderUserRepository.findByUsername("reader@example.com")).thenReturn(Optional.empty());
         when(userRepository.findById(7L)).thenReturn(Optional.of(new BookLoreUserEntity()));
         when(koreaderUserRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-        when(koreaderUserMapper.toDto(any())).thenReturn(new KoreaderUser());
+        when(koreaderUserMapper.toDto(any())).thenReturn(mock(KoreaderUser.class));
 
         service.rotatePassword();
 
@@ -149,7 +149,7 @@ class KoreaderUserServiceTest {
         when(koreaderUserRepository.findByUsername("reader@example.com")).thenReturn(Optional.of(new KoreaderUserEntity()));
         when(userRepository.findById(7L)).thenReturn(Optional.of(new BookLoreUserEntity()));
         when(koreaderUserRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-        when(koreaderUserMapper.toDto(any())).thenReturn(new KoreaderUser());
+        when(koreaderUserMapper.toDto(any())).thenReturn(mock(KoreaderUser.class));
 
         service.getUser();
 
