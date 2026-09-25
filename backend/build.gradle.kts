@@ -10,7 +10,7 @@ plugins {
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "7.4.8.Final"
-    id("com.github.ben-manes.versions") version "0.62.0"
+    id("com.github.ben-manes.versions") version "0.64.0"
     jacoco
 }
 
@@ -112,7 +112,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-http-client")
-    implementation("com.nimbusds:nimbus-jose-jwt:10.9.1")
+    implementation("com.nimbusds:nimbus-jose-jwt:10.10")
 
     // --- Reactive Streams ---
     implementation("io.projectreactor:reactor-core")
@@ -120,7 +120,7 @@ dependencies {
     // --- Database & Migration ---
     implementation("org.mariadb.jdbc:mariadb-java-client:3.5.10")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
-    implementation("org.flywaydb:flyway-mysql:13.6.0")
+    implementation("org.flywaydb:flyway-mysql:13.7.0")
 
     // --- Lombok (For Clean Code) ---
     compileOnly("org.projectlombok:lombok:1.18.48")
@@ -132,10 +132,10 @@ dependencies {
     runtimeOnly("org.grimmory:pdfium4j:$pdfium4jVersion:${pdfiumNativesClassifier()}")
 
     // --- TwelveMonkeys ImageIO ---
-    implementation("com.twelvemonkeys.imageio:imageio-jpeg:3.15.0")
-    implementation("com.twelvemonkeys.imageio:imageio-tiff:3.15.0")
-    implementation("com.twelvemonkeys.imageio:imageio-webp:3.15.0")
-    implementation("com.twelvemonkeys.imageio:imageio-bmp:3.15.0")
+    implementation("com.twelvemonkeys.imageio:imageio-jpeg:3.15.2")
+    implementation("com.twelvemonkeys.imageio:imageio-tiff:3.15.2")
+    implementation("com.twelvemonkeys.imageio:imageio-webp:3.15.2")
+    implementation("com.twelvemonkeys.imageio:imageio-bmp:3.15.2")
 
     // epub4j-grimmory fork publishes as org.grimmory:epub4j-core
     implementation("org.grimmory:epub4j-core:2.1.0")
