@@ -499,8 +499,6 @@
       },
       "sortFields": {
         "title": "Judul",
-        "fileName": "",
-        "filePath": "",
         "addedOn": "",
         "author": "Penulis",
         "authorSurnameVorname": "",
@@ -513,7 +511,6 @@
         "readStatus": "",
         "dateFinished": "",
         "readingProgress": "",
-        "bookType": "",
         "pageCount": "Halaman"
       },
       "sortDirections": {
@@ -529,8 +526,6 @@
       "sortOrderLabel": "",
       "ascending": "Naik",
       "descending": "Turun",
-      "remove": "Hapus",
-      "addSortField": "",
       "autoSave": "",
       "autoSaveDesc": "",
       "overrideManagement": "",
@@ -546,34 +541,6 @@
       "saveSettings": "",
       "saveSuccess": "",
       "saveSuccessDetail": "",
-      "sortTitle": "Judul",
-      "sortFileName": "",
-      "sortFilePath": "",
-      "sortAuthor": "Penulis",
-      "sortAuthorSurname": "",
-      "sortSeriesName": "",
-      "sortSeriesNumber": "",
-      "sortLastRead": "",
-      "sortPersonalRating": "",
-      "sortAddedOn": "",
-      "sortFileSize": "",
-      "sortLocked": "Terkunci",
-      "sortPublisher": "Penerbit",
-      "sortPublishedDate": "",
-      "sortAmazonRating": "",
-      "sortAmazonCount": "",
-      "sortGoodreadsRating": "",
-      "sortGoodreadsCount": "",
-      "sortHardcoverRating": "",
-      "sortHardcoverCount": "",
-      "sortRanobedbRating": "",
-      "sortReadStatus": "",
-      "sortDateFinished": "",
-      "sortReadingProgress": "",
-      "sortBookType": "",
-      "sortNarrator": "Narator",
-      "sortPages": "Halaman",
-      "sortRandom": "Acak",
       "entityLibrary": "Perpustakaan",
       "entityShelf": "Rak",
       "entityMagicShelf": "",
@@ -583,25 +550,7 @@
       "sortSaved": "",
       "sortSavedDetail": "",
       "editSort": "",
-      "tableSortConfig": "",
-      "visibleSortFields": "",
-      "visibleSortFieldsDesc": "",
-      "sortFieldCount": "",
-      "resetToDefaults": ""
-    },
-    "filter": {
-      "sectionTitle": "",
-      "sectionDesc": "",
-      "filterMode": "",
-      "filterModeDesc": "",
-      "visibleFilters": "",
-      "visibleFiltersDesc": "",
-      "selectionCount": "",
-      "addFilter": "",
-      "resetToDefaults": "",
-      "modeAnd": "Dan",
-      "modeOr": "Atau",
-      "modeSingle": ""
+      "tableSortConfig": ""
     },
     "sidebarSort": {
       "sectionTitle": "",
@@ -2785,68 +2734,20 @@
         "customCoverHeader": "Konfirmasi Pembuatan Sampul Khusus"
       },
       "toast": {
-        "sortSavedSummary": "Pengurutan Disimpan",
-        "sortSavedGlobalDetail": "Konfigurasi bawaan pengurutan disimpan.",
-        "sortSavedEntityDetail": "Konfigurasi pengurutan disimpan untuk {{ entityType }} ini.",
         "regenCoverStartedSummary": "Pembuatan Ulang Sampul Dimulai",
         "regenCoverStartedDetail": "Memperbarui sampul untuk {{ count }} buku. Segarkan halaman setelah selesai.",
         "customCoverStartedSummary": "Pembuatan Sampul Khusus Dimulai",
         "customCoverStartedDetail": "Membuat sampul khusus untuk {{ count }} buku.",
         "failedSummary": "Gagal",
         "regenCoverFailedDetail": "Tidak dapat memulai pembuatan ulang sampul.",
-        "customCoverFailedDetail": "Tidak dapat memulai pembuatan sampul khusus.",
-        "unshelveSuccessDetail": "Rak buku diperbarui",
-        "unshelveFailedDetail": "Gagal memperbarui rak buku",
-        "noEligibleBooksSummary": "",
-        "noEligibleBooksDetail": "Buku yang dipilih harus berupa buku satu file (tidak ada format alternatif).",
-        "multipleLibrariesSummary": "",
-        "multipleLibrariesDetail": "Semua buku yang dipilih harus berasal dari perpustakaan yang sama."
+        "customCoverFailedDetail": "Tidak dapat memulai pembuatan sampul khusus."
       },
       "loading": {
-        "deleting": "Menghapus {{ count }} buku...",
-        "unshelving": "Mengeluarkan {{ count }} buku dari rak..."
+        "deleting": "Menghapus {{ count }} buku..."
       },
       "labels": {
         "allBooks": "Semua Buku",
-        "unshelvedBooks": "Buku Di Luar Rak",
-        "unshelvedBooksFiltered": "Buku Di Luar Rak (Disaring)",
-        "filteredSuffix": "(Disaring)",
-        "seriesCollapsedInfo": "",
-        "item": "",
-        "items": "",
-        "selected": "dipilih",
-        "setAsDefault": "Tetapkan sebagai bawaan?",
-        "save": "Simpan",
-        "collapseSeries": "",
-        "gridColumns": "",
-        "bookTypeOverlay": "",
-        "noBooks": "Tidak ada buku di koleksi ini!",
-        "failedLibrary": "Gagal memuat buku perpustakaan!",
-        "failedShelf": "Gagal memuat rak buku!",
-        "failedBooks": "",
-        "activeFilters": "{{ count }} Saringan Aktif"
-      },
-      "tooltip": {
-        "clearFilters": "Bersikan saringan yang diterapkan",
-        "visibleColumns": "",
-        "selectSorting": "Pilih pengurutan",
-        "toggleView": "",
-        "search": "Cari",
-        "toggleSidebar": "",
-        "metadataActions": "",
-        "assignToShelf": "Masukkan ke rak",
-        "removeFromShelf": "Keluarkan dari rak ini",
-        "lockUnlockMetadata": "Kunci/Buka kunci metadata",
-        "organizeFiles": "Atur Berkas",
-        "attachToBook": "Sematkan ke Buku Lainnya",
-        "moreActions": "Tindakan lain",
-        "selectAll": "Pilih semua buku",
-        "deselectAll": "Batalkan memilih semua buku",
-        "deleteSelected": "Hapus buku terpilih"
-      },
-      "placeholder": {
-        "selectColumns": "Pilih Kolom",
-        "search": "Judul, Pengarang, Seri, Genre, atau ISBN..."
+        "unshelvedBooks": "Buku Di Luar Rak"
       }
     },
     "card": {
@@ -3084,46 +2985,10 @@
         "deletingLibrary": ""
       }
     },
-    "columnPref": {
-      "columns": {
-        "readStatus": "",
-        "title": "",
-        "authors": "",
-        "publisher": "",
-        "seriesName": "",
-        "seriesNumber": "",
-        "categories": "",
-        "publishedDate": "",
-        "lastReadTime": "",
-        "addedOn": "",
-        "fileName": "",
-        "fileSizeKb": "",
-        "language": "",
-        "isbn": "",
-        "pageCount": "",
-        "amazonRating": "",
-        "amazonReviewCount": "",
-        "goodreadsRating": "",
-        "goodreadsReviewCount": "",
-        "hardcoverRating": "",
-        "hardcoverReviewCount": "",
-        "ranobedbRating": ""
-      },
-      "toast": {
-        "savedSummary": "",
-        "savedDetail": ""
-      }
-    },
     "coverPref": {
       "toast": {
         "savedSummary": "",
         "savedDetail": "",
-        "saveFailedSummary": "",
-        "saveFailedDetail": ""
-      }
-    },
-    "filterPref": {
-      "toast": {
         "saveFailedSummary": "",
         "saveFailedDetail": ""
       }
@@ -3285,41 +3150,7 @@
       }
     },
     "filter": {
-      "title": "",
       "showingFirst100": "",
-      "footerNote": "",
-      "labels": {
-        "author": "",
-        "category": "",
-        "series": "",
-        "bookType": "",
-        "readStatus": "",
-        "personalRating": "",
-        "publisher": "",
-        "matchScore": "",
-        "library": "",
-        "shelf": "",
-        "shelfStatus": "",
-        "tag": "",
-        "publishedDate": "",
-        "fileSize": "",
-        "amazonRating": "",
-        "goodreadsRating": "",
-        "hardcoverRating": "",
-        "lubimyczytacRating": "",
-        "ranobedbRating": "",
-        "audibleRating": "",
-        "language": "",
-        "pageCount": "",
-        "mood": "",
-        "ageRating": "",
-        "contentRating": "",
-        "narrator": "",
-        "comicCharacter": "",
-        "comicTeam": "",
-        "comicLocation": "",
-        "comicCreator": ""
-      },
       "readStatus": {
         "unread": "",
         "reading": "",
@@ -3372,14 +3203,6 @@
       "shelfStatus": {
         "shelved": "",
         "unshelved": ""
-      },
-      "comicRoles": {
-        "penciller": "",
-        "inker": "",
-        "colorist": "",
-        "letterer": "",
-        "coverArtist": "",
-        "editor": ""
       }
     },
     "shelfAssigner": {
@@ -3442,27 +3265,6 @@
         "updateFailedDetail": ""
       }
     },
-    "table": {
-      "label": "",
-      "bookCoverAlt": "",
-      "selectBook": "",
-      "selectBookFallback": "",
-      "noRating": "",
-      "ratingOutOf": "",
-      "statusWithPrefix": "{{ status }}",
-      "locked": "",
-      "unlocked": "",
-      "toast": {
-        "metadataLockedSummary": "",
-        "metadataLockedDetail": "",
-        "metadataUnlockedSummary": "",
-        "metadataUnlockedDetail": "",
-        "lockFailedSummary": "",
-        "lockFailedDetail": "",
-        "unlockFailedSummary": "",
-        "unlockFailedDetail": ""
-      }
-    },
     "lockUnlockDialog": {
       "title": "",
       "selectedCount": "",
@@ -3483,42 +3285,7 @@
       }
     },
     "sorting": {
-      "sortOrder": "",
-      "removeTooltip": "",
-      "addSortFieldPlaceholder": "",
-      "saveAsDefault": "",
-      "ascendingTooltip": "",
-      "descendingTooltip": "",
-      "options": {
-        "title": "",
-        "fileName": "",
-        "filePath": "",
-        "author": "",
-        "authorSurnameVorname": "",
-        "seriesName": "",
-        "seriesNumber": "",
-        "lastReadTime": "",
-        "personalRating": "",
-        "addedOn": "",
-        "fileSizeKb": "",
-        "locked": "",
-        "publisher": "",
-        "publishedDate": "",
-        "readStatus": "",
-        "dateFinished": "",
-        "readingProgress": "",
-        "bookType": "",
-        "amazonRating": "",
-        "amazonReviewCount": "",
-        "goodreadsRating": "",
-        "goodreadsReviewCount": "",
-        "hardcoverRating": "",
-        "hardcoverReviewCount": "",
-        "ranobedbRating": "",
-        "narrator": "",
-        "pageCount": "",
-        "random": ""
-      }
+      "saveAsDefault": ""
     },
     "fileAttacher": {
       "title": "",
@@ -3698,6 +3465,53 @@
       "continueListening": {
         "short": "Lanjutkan"
       }
+    },
+    "viewMode": {
+      "table": "Tabel"
+    },
+    "fields": {
+      "title": "Title",
+      "author": "Author",
+      "genre": "Genre",
+      "series": "Series",
+      "seriesNumber": "Series number",
+      "publisher": "Publisher",
+      "tag": "Tag",
+      "mood": "Mood",
+      "language": "Language",
+      "narrator": "Narrator",
+      "fileType": "File format",
+      "readStatus": "Read status",
+      "personalRating": "Personal rating",
+      "amazonRating": "Amazon rating",
+      "amazonReviewCount": "Amazon reviews",
+      "goodreadsRating": "Goodreads rating",
+      "goodreadsReviewCount": "Goodreads reviews",
+      "hardcoverRating": "Hardcover rating",
+      "hardcoverReviewCount": "Hardcover reviews",
+      "ranobedbRating": "RanobeDB rating",
+      "lubimyczytacRating": "Lubimyczytac rating",
+      "audibleRating": "Audible rating",
+      "pageCount": "Pages",
+      "publishedDate": "Published date",
+      "publishedYear": "Published year",
+      "addedOn": "Date added",
+      "lastReadTime": "Last read",
+      "dateFinished": "Date finished",
+      "readingProgress": "Reading progress",
+      "fileName": "File name",
+      "fileSize": "File size",
+      "isbn": "ISBN",
+      "library": "Library",
+      "shelf": "Shelf",
+      "ageRating": "Age rating",
+      "contentRating": "Content rating",
+      "matchScore": "Metadata match score",
+      "shelfStatus": "Shelf status",
+      "comicCharacter": "Comic character",
+      "comicTeam": "Comic team",
+      "comicLocation": "Comic location",
+      "comicCreator": "Comic creator"
     }
   },
   "readerAudiobook": {
@@ -5363,6 +5177,21 @@
         "matchFailedSummary": "",
         "matchFailedDetail": ""
       }
+    }
+  },
+  "browse": {
+    "moreActions": "Tindakan lain",
+    "toolbar": {
+      "columnGroups": {
+        "file": "Berkas",
+        "ratings": "Rating"
+      },
+      "viewMode": "Tampilan",
+      "density": "Ukuran"
+    },
+    "bulk": {
+      "organizeFiles": "Atur Berkas",
+      "lockUnlockMetadata": "Kunci/Buka kunci metadata"
     }
   }
 }

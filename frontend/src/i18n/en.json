@@ -17,6 +17,7 @@
     "next": "Next",
     "submit": "Submit",
     "remove": "Remove",
+    "clear": "Clear",
     "edit": "Edit",
     "info": "Info",
     "select": "Select",
@@ -499,8 +500,6 @@
       },
       "sortFields": {
         "title": "Title",
-        "fileName": "File Name",
-        "filePath": "File Path",
         "addedOn": "Date Added",
         "author": "Author",
         "authorSurnameVorname": "Author (Surname)",
@@ -513,7 +512,6 @@
         "readStatus": "Read Status",
         "dateFinished": "Date Finished",
         "readingProgress": "Reading Progress",
-        "bookType": "File Format",
         "pageCount": "Pages"
       },
       "sortDirections": {
@@ -525,12 +523,11 @@
       "sectionTitle": "Library and Shelf View & Sort Preferences",
       "sectionDesc": "Configure default and per-library/shelf preferences for sorting and view mode (grid or table) in the browser.",
       "defaultPreferences": "Default Preferences",
-      "defaultPreferencesDesc": "Configure the default view mode and multi-field sorting for all libraries and shelves. Drag to reorder sort priority.",
+      "defaultPreferencesDesc": "Configure the default view mode and multi-field sorting for all libraries and shelves.",
       "sortOrderLabel": "Sort Order (drag to reorder)",
+      "formatOverlay": "File Format Overlay",
       "ascending": "Ascending",
       "descending": "Descending",
-      "remove": "Remove",
-      "addSortField": "Add sort field...",
       "autoSave": "Auto-save on Navigation",
       "autoSaveDesc": "Automatically save changes when navigating to the next or previous book in the metadata editor.",
       "overrideManagement": "Override Management",
@@ -546,34 +543,6 @@
       "saveSettings": "Save Settings",
       "saveSuccess": "Preferences Saved",
       "saveSuccessDetail": "Your sorting and view preferences were saved successfully.",
-      "sortTitle": "Title",
-      "sortFileName": "File Name",
-      "sortFilePath": "File Path",
-      "sortAuthor": "Author",
-      "sortAuthorSurname": "Author (Surname)",
-      "sortSeriesName": "Series Name",
-      "sortSeriesNumber": "Series Number",
-      "sortLastRead": "Last Read",
-      "sortPersonalRating": "Personal Rating",
-      "sortAddedOn": "Added On",
-      "sortFileSize": "File Size",
-      "sortLocked": "Locked",
-      "sortPublisher": "Publisher",
-      "sortPublishedDate": "Published Date",
-      "sortAmazonRating": "Amazon Rating",
-      "sortAmazonCount": "Amazon #",
-      "sortGoodreadsRating": "Goodreads Rating",
-      "sortGoodreadsCount": "Goodreads #",
-      "sortHardcoverRating": "Hardcover Rating",
-      "sortHardcoverCount": "Hardcover #",
-      "sortRanobedbRating": "Ranobedb Rating",
-      "sortReadStatus": "Read Status",
-      "sortDateFinished": "Date Finished",
-      "sortReadingProgress": "Reading Progress",
-      "sortBookType": "File Format",
-      "sortNarrator": "Narrator",
-      "sortPages": "Pages",
-      "sortRandom": "Random",
       "entityLibrary": "Library",
       "entityShelf": "Shelf",
       "entityMagicShelf": "Magic Shelf",
@@ -583,25 +552,7 @@
       "sortSaved": "Sort Saved",
       "sortSavedDetail": "Sort configuration saved for this {{entityType}}.",
       "editSort": "Edit Sort",
-      "tableSortConfig": "Sort Config",
-      "visibleSortFields": "Visible Sort Fields",
-      "visibleSortFieldsDesc": "Choose which sort fields appear in the book browser's sort dropdown and drag to reorder.",
-      "sortFieldCount": "{{count}} of {{total}} selected",
-      "resetToDefaults": "Reset to defaults"
-    },
-    "filter": {
-      "sectionTitle": "Filter Preferences",
-      "sectionDesc": "Configure default options for filter controls shown in the sidebar.",
-      "filterMode": "Filter Mode",
-      "filterModeDesc": "Choose the default mode for combining filters selected from the right filter sidebar.",
-      "visibleFilters": "Visible Filters",
-      "visibleFiltersDesc": "Choose which filters appear in the sidebar and drag to reorder. Between {{min}} and {{max}} filters.",
-      "selectionCount": "{{count}} of {{total}} selected",
-      "addFilter": "Add filter...",
-      "resetToDefaults": "Reset to defaults",
-      "modeAnd": "And",
-      "modeOr": "Or",
-      "modeSingle": "Single"
+      "tableSortConfig": "Sort Config"
     },
     "sidebarSort": {
       "sectionTitle": "Sidebar Library and Shelf Sorting Preference",
@@ -1428,8 +1379,6 @@
       "syncConfigDesc": "Enable and configure synchronization between your Grimmory library and KOReader device.",
       "enableSync": "Enable KOReader Sync",
       "enableSyncDesc": "Turn on synchronization to automatically sync your reading progress.",
-      "syncWithGrimmory": "Sync reading progress with Grimmory eBook Reader",
-      "syncWithGrimmoryDesc": "Enable bidirectional sync between Grimmory's eBook reader and KOReader. <strong>Note:</strong> Progress sync is approximate and may update by chapter rather than exact page or location.",
       "apiPath": "KOReader API Path",
       "apiPathDesc": "The API endpoint path for your KOReader sync service.",
       "username": "KOReader Username",
@@ -1519,9 +1468,6 @@
       "syncEnabled": "Kobo sync enabled",
       "syncDisabled": "Kobo sync disabled",
       "progressUpdated": "Progress thresholds updated successfully",
-      "twoWaySyncLabel": "Two-Way Reading Progress Sync",
-      "twoWaySyncDesc": "Enable bidirectional sync between Grimmory's web reader and your Kobo device. Reading progress made on either platform will be reflected on the other.",
-      "twoWaySyncNote": "Note: Due to different position formats, sync accuracy is best-effort. In most cases progress will be accurate to the chapter level.",
       "twoWaySyncKepubWarning": "KEPUB conversion is currently disabled. Two-way progress sync requires KEPUB conversion to be enabled by an administrator.",
       "twoWaySyncKepubWarningAdmin": "KEPUB conversion is currently disabled. Enable it in the Administrator Settings below for two-way progress sync to work.",
       "twoWaySyncEnabled": "Two-way progress sync enabled",
@@ -1806,6 +1752,9 @@
         "parse": "Enter a valid value",
         "pattern": "Enter a valid value",
         "required": "This field is required"
+      },
+      "bulkActions": {
+        "selectAll": "Select All"
       }
     }
   },
@@ -2814,68 +2763,20 @@
         "customCoverHeader": "Confirm Custom Cover Generation"
       },
       "toast": {
-        "sortSavedSummary": "Sort Saved",
-        "sortSavedGlobalDetail": "Default sort configuration saved.",
-        "sortSavedEntityDetail": "Sort configuration saved for this {{ entityType }}.",
         "regenCoverStartedSummary": "Cover Regeneration Started",
         "regenCoverStartedDetail": "Regenerating covers for {{ count }} book(s). Refresh the page when complete.",
         "customCoverStartedSummary": "Custom Cover Generation Started",
         "customCoverStartedDetail": "Generating custom covers for {{ count }} book(s).",
         "failedSummary": "Failed",
         "regenCoverFailedDetail": "Could not start cover regeneration.",
-        "customCoverFailedDetail": "Could not start custom cover generation.",
-        "unshelveSuccessDetail": "Books shelves updated",
-        "unshelveFailedDetail": "Failed to update books shelves",
-        "noEligibleBooksSummary": "No Eligible Books",
-        "noEligibleBooksDetail": "Selected books must be single-file books (no alternative formats).",
-        "multipleLibrariesSummary": "Multiple Libraries",
-        "multipleLibrariesDetail": "All selected books must be from the same library."
+        "customCoverFailedDetail": "Could not start custom cover generation."
       },
       "loading": {
-        "deleting": "Deleting {{ count }} book(s)...",
-        "unshelving": "Unshelving {{ count }} book(s)..."
+        "deleting": "Deleting {{ count }} book(s)..."
       },
       "labels": {
         "allBooks": "All Books",
-        "unshelvedBooks": "Unshelved Books",
-        "unshelvedBooksFiltered": "Unshelved Books (Filtered)",
-        "filteredSuffix": "(Filtered)",
-        "seriesCollapsedInfo": "Showing {{ count }} {{ itemWord }} (series collapsed)",
-        "item": "item",
-        "items": "items",
-        "selected": "selected",
-        "setAsDefault": "Set as default?",
-        "save": "Save",
-        "collapseSeries": "Collapse series",
-        "gridColumns": "Grid columns",
-        "bookTypeOverlay": "File format overlay",
-        "noBooks": "This collection has no books!",
-        "failedLibrary": "Failed to load library's books!",
-        "failedShelf": "Failed to load shelf's books!",
-        "failedBooks": "Failed to load books!",
-        "activeFilters": "{{ count }} Active Filters"
-      },
-      "tooltip": {
-        "clearFilters": "Clear applied filters",
-        "visibleColumns": "Visible columns",
-        "selectSorting": "Select sorting",
-        "toggleView": "Toggle between Grid and Table view",
-        "search": "Search",
-        "toggleSidebar": "Toggle sidebar filters",
-        "metadataActions": "Metadata actions",
-        "assignToShelf": "Assign to shelf",
-        "removeFromShelf": "Remove from this shelf",
-        "lockUnlockMetadata": "Lock/Unlock metadata",
-        "organizeFiles": "Organize Files",
-        "attachToBook": "Attach to Another Book",
-        "moreActions": "More actions",
-        "selectAll": "Select all books",
-        "deselectAll": "Deselect all books",
-        "deleteSelected": "Delete selected books"
-      },
-      "placeholder": {
-        "selectColumns": "Select Columns",
-        "search": "Title, Author, Series, Genre, or ISBN..."
+        "unshelvedBooks": "Unshelved Books"
       }
     },
     "card": {
@@ -3004,6 +2905,10 @@
       }
     },
     "selectBook": "Select {{ title }}",
+    "viewMode": {
+      "grid": "Grid",
+      "table": "Table"
+    },
     "notes": {
       "confirm": {
         "deleteMessage": "Are you sure you want to delete the note \"{{ title }}\"?",
@@ -3131,7 +3036,8 @@
         "customFetchMetadata": "Custom Fetch Metadata",
         "autoFetchMetadata": "Auto Fetch Metadata",
         "findDuplicates": "Find Duplicates",
-        "deleteLibrary": "Delete Library"
+        "deleteLibrary": "Delete Library",
+        "manageLibrary": "Manage Library"
       },
       "shelf": {
         "publicShelfPrefix": "Public Shelf - ",
@@ -3172,48 +3078,12 @@
         "deletingLibrary": "Deleting library '{{ name }}'..."
       }
     },
-    "columnPref": {
-      "columns": {
-        "readStatus": "Read",
-        "title": "Title",
-        "authors": "Authors",
-        "publisher": "Publisher",
-        "seriesName": "Series",
-        "seriesNumber": "Series #",
-        "categories": "Genres",
-        "publishedDate": "Published",
-        "lastReadTime": "Last Read",
-        "addedOn": "Added",
-        "fileName": "File Name",
-        "fileSizeKb": "File Size",
-        "language": "Language",
-        "isbn": "ISBN",
-        "pageCount": "Pages",
-        "amazonRating": "Amazon",
-        "amazonReviewCount": "AZ #",
-        "goodreadsRating": "Goodreads",
-        "goodreadsReviewCount": "GR #",
-        "hardcoverRating": "Hardcover",
-        "hardcoverReviewCount": "HC #",
-        "ranobedbRating": "Ranobedb"
-      },
-      "toast": {
-        "savedSummary": "Preferences Saved",
-        "savedDetail": "Your column layout has been saved."
-      }
-    },
     "coverPref": {
       "toast": {
         "savedSummary": "Cover Size Saved",
         "savedDetail": "Cover size set to {{ scale }}x.",
         "saveFailedSummary": "Save Failed",
         "saveFailedDetail": "Could not save cover size preference locally."
-      }
-    },
-    "filterPref": {
-      "toast": {
-        "saveFailedSummary": "Save Failed",
-        "saveFailedDetail": "Could not save sidebar filter preference locally."
       }
     },
     "reviews": {
@@ -3375,41 +3245,7 @@
       }
     },
     "filter": {
-      "title": "Filters",
       "showingFirst100": "Showing first 100 items",
-      "footerNote": "Note: Top 100 items are displayed per filter category",
-      "labels": {
-        "author": "Author",
-        "category": "Genre",
-        "series": "Series",
-        "bookType": "File Format",
-        "readStatus": "Read Status",
-        "personalRating": "Personal Rating",
-        "publisher": "Publisher",
-        "matchScore": "Metadata Match Score",
-        "library": "Library",
-        "shelf": "Shelf",
-        "shelfStatus": "Shelf Status",
-        "tag": "Tag",
-        "publishedDate": "Published Year",
-        "fileSize": "File Size",
-        "amazonRating": "Amazon Rating",
-        "goodreadsRating": "Goodreads Rating",
-        "hardcoverRating": "Hardcover Rating",
-        "lubimyczytacRating": "Lubimyczytac Rating",
-        "ranobedbRating": "RanobeDB Rating",
-        "audibleRating": "Audible Rating",
-        "language": "Language",
-        "pageCount": "Page Count",
-        "mood": "Mood",
-        "ageRating": "Age Rating",
-        "contentRating": "Content Rating",
-        "narrator": "Narrator",
-        "comicCharacter": "Comic Character",
-        "comicTeam": "Comic Team",
-        "comicLocation": "Comic Location",
-        "comicCreator": "Comic Creator"
-      },
       "readStatus": {
         "unread": "Unread",
         "reading": "Reading",
@@ -3462,14 +3298,6 @@
       "shelfStatus": {
         "shelved": "Shelved",
         "unshelved": "Unshelved"
-      },
-      "comicRoles": {
-        "penciller": "Penciller",
-        "inker": "Inker",
-        "colorist": "Colorist",
-        "letterer": "Letterer",
-        "coverArtist": "Cover Artist",
-        "editor": "Editor"
       }
     },
     "shelfAssigner": {
@@ -3532,27 +3360,6 @@
         "updateFailedDetail": "An error occurred while updating the shelf. Please try again."
       }
     },
-    "table": {
-      "label": "Books table",
-      "bookCoverAlt": "Book Cover",
-      "selectBook": "Select {{ title }}",
-      "selectBookFallback": "Select book",
-      "noRating": "No rating",
-      "ratingOutOf": "{{ rating }} out of {{ max }}",
-      "statusWithPrefix": "Status: {{ status }}",
-      "locked": "Locked",
-      "unlocked": "Unlocked",
-      "toast": {
-        "metadataLockedSummary": "Metadata Locked",
-        "metadataLockedDetail": "Book metadata has been locked successfully.",
-        "metadataUnlockedSummary": "Metadata Unlocked",
-        "metadataUnlockedDetail": "Book metadata has been unlocked successfully.",
-        "lockFailedSummary": "Failed to Lock",
-        "lockFailedDetail": "An error occurred while locking the metadata.",
-        "unlockFailedSummary": "Failed to Unlock",
-        "unlockFailedDetail": "An error occurred while unlocking the metadata."
-      }
-    },
     "lockUnlockDialog": {
       "title": "Lock or Unlock Metadata",
       "selectedCount": "{{ count }} book(s) selected",
@@ -3573,42 +3380,7 @@
       }
     },
     "sorting": {
-      "sortOrder": "Sort Order",
-      "removeTooltip": "Remove",
-      "addSortFieldPlaceholder": "Add sort field...",
-      "saveAsDefault": "Save as Default",
-      "ascendingTooltip": "Ascending - click to change",
-      "descendingTooltip": "Descending - click to change",
-      "options": {
-        "title": "Title",
-        "fileName": "File Name",
-        "filePath": "File Path",
-        "author": "Author",
-        "authorSurnameVorname": "Author (Surname)",
-        "seriesName": "Series Name",
-        "seriesNumber": "Series Number",
-        "lastReadTime": "Last Read",
-        "personalRating": "Personal Rating",
-        "addedOn": "Added On",
-        "fileSizeKb": "File Size",
-        "locked": "Locked",
-        "publisher": "Publisher",
-        "publishedDate": "Published Date",
-        "readStatus": "Read Status",
-        "dateFinished": "Date Finished",
-        "readingProgress": "Reading Progress",
-        "bookType": "File Format",
-        "amazonRating": "Amazon Rating",
-        "amazonReviewCount": "Amazon #",
-        "goodreadsRating": "Goodreads Rating",
-        "goodreadsReviewCount": "Goodreads #",
-        "hardcoverRating": "Hardcover Rating",
-        "hardcoverReviewCount": "Hardcover #",
-        "ranobedbRating": "Ranobedb Rating",
-        "narrator": "Narrator",
-        "pageCount": "Pages",
-        "random": "Random"
-      }
+      "saveAsDefault": "Save as Default for {{scope}}"
     },
     "fileAttacher": {
       "title": "Attach File to Another Book",
@@ -3635,7 +3407,7 @@
     },
     "searcher": {
       "placeholder": "Title, Author, Series, Genre, or ISBN...",
-      "clearSearch": "Clear Search",
+      "clearSearch": "Clear search",
       "bookCoverAlt": "Book Cover",
       "byPrefix": "by",
       "noResults": "No results found",
@@ -3772,6 +3544,53 @@
         "mergeFailedDetail": "Could not merge this group.",
         "mergePartialDetail": "{{ success }} merged, {{ failed }} failed."
       }
+    },
+    "fields": {
+      "random": "Random",
+      "title": "Title",
+      "author": "Author",
+      "authorSurname": "Author (Surname)",
+      "genre": "Genre",
+      "series": "Series",
+      "seriesNumber": "Series position",
+      "publisher": "Publisher",
+      "tag": "Tag",
+      "mood": "Mood",
+      "language": "Language",
+      "narrator": "Narrator",
+      "fileType": "File format",
+      "readStatus": "Read status",
+      "personalRating": "Personal rating",
+      "amazonRating": "Amazon rating",
+      "amazonReviewCount": "Amazon rating count",
+      "goodreadsRating": "Goodreads rating",
+      "goodreadsReviewCount": "Goodreads rating count",
+      "hardcoverRating": "Hardcover rating",
+      "hardcoverReviewCount": "Hardcover rating count",
+      "ranobedbRating": "RanobeDB rating",
+      "pageCount": "Pages",
+      "publishedDate": "Published date",
+      "publishedYear": "Published year",
+      "addedOn": "Date added",
+      "lastReadTime": "Last read",
+      "dateFinished": "Date finished",
+      "readingProgress": "Reading progress",
+      "fileName": "File name",
+      "fileSize": "File size",
+      "isbn": "ISBN",
+      "library": "Library",
+      "shelf": "Shelf",
+      "ageRating": "Age rating",
+      "contentRating": "Content rating",
+      "matchScore": "Metadata match score",
+      "shelfStatus": "Shelf status",
+      "comicCharacter": "Comic character",
+      "comicTeam": "Comic team",
+      "comicLocation": "Comic location",
+      "comicCreator": "Comic creator",
+      "lubimyczytacRating": "Lubimyczytac rating",
+      "audibleReviewCount": "Audible rating count",
+      "audibleRating": "Audible rating"
     }
   },
   "readerAudiobook": {
@@ -5437,6 +5256,83 @@
         "matchFailedSummary": "Match Failed",
         "matchFailedDetail": "Failed to match author with external metadata."
       }
+    }
+  },
+  "browse": {
+    "showAll": "Show All",
+    "showFewer": "Show Fewer",
+    "clearFilters": "Clear Filters",
+    "filter": "Filter",
+    "moreActions": "More Actions",
+    "sort": {
+      "multiSort": "Multi-Sort",
+      "addField": "Add Field",
+      "apply": "Apply",
+      "moveUp": "Move Up",
+      "moveDown": "Move Down",
+      "flipDirection": "Flip Direction"
+    },
+    "chips": {
+      "removeSearch": "Remove Search Filter {{query}}"
+    },
+    "rail": {
+      "searchValues": "Search…",
+      "searchFields": "Title, author, genre…",
+      "searchScope": {
+        "allBooks": "Search All Books",
+        "library": "Search Library",
+        "shelf": "Search Shelf",
+        "magicShelf": "Search Magic Shelf",
+        "unshelved": "Search Unshelved Books"
+      },
+      "noMatches": "No matches",
+      "minUnit": "Min unit",
+      "maxUnit": "Max unit",
+      "min": "Min",
+      "max": "Max"
+    },
+    "book": {
+      "empty": "No books here yet.",
+      "filteredEmpty": "No books match these filters.",
+      "loadError": "We couldn't load these books.",
+      "pageError": "Couldn't load more books."
+    },
+    "table": {
+      "moreValues": "Show {{count}} more {{column}}"
+    },
+    "toolbar": {
+      "columnGroups": {
+        "reading": "Reading",
+        "publishing": "Publishing",
+        "file": "File",
+        "categorization": "Categorization",
+        "ratings": "Ratings"
+      },
+      "sort": "Sort",
+      "sortAria": "Sort by {{field}}",
+      "sortAscending": "Sort Ascending",
+      "sortDescending": "Sort Descending",
+      "shuffleAgain": "Shuffle Again",
+      "viewMode": "View",
+      "density": "Size",
+      "smallerCards": "Smaller Cards",
+      "largerCards": "Larger Cards",
+      "showFilters": "Show Filters",
+      "columns": "Columns",
+      "resetColumns": "Reset to Default"
+    },
+    "bulk": {
+      "markAsMessage": "Mark {{count}} books as {{status}}?",
+      "editAll": "Edit All",
+      "editOneByOne": "Edit One by One",
+      "selectionEmpty": "That selection no longer matches any books.",
+      "selectionLoadError": "Couldn't load the selection. Please try again.",
+      "organizeFiles": "Organize Files",
+      "updateReadStatus": "Update Read Status",
+      "lockUnlockMetadata": "Lock/Unlock Metadata"
+    },
+    "filterPage": {
+      "show": "Show {{count}} Books"
     }
   }
 }

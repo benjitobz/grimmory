@@ -9,7 +9,7 @@ plugins {
     java
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "7.4.8.Final"
+    id("org.hibernate.orm") version "7.4.10.Final"
     id("com.github.ben-manes.versions") version "0.64.0"
     jacoco
 }
@@ -120,14 +120,14 @@ dependencies {
     // --- Database & Migration ---
     implementation("org.mariadb.jdbc:mariadb-java-client:3.5.10")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
-    implementation("org.flywaydb:flyway-mysql:13.7.0")
+    implementation("org.flywaydb:flyway-mysql:13.8.0")
 
     // --- Lombok (For Clean Code) ---
     compileOnly("org.projectlombok:lombok:1.18.48")
     annotationProcessor("org.projectlombok:lombok:1.18.48")
 
     // --- Book & Image Processing ---
-    val pdfium4jVersion = if (useLocalLibs) "+" else "1.2.0"
+    val pdfium4jVersion = if (useLocalLibs) "+" else "1.3.0"
     implementation("org.grimmory:pdfium4j:$pdfium4jVersion")
     runtimeOnly("org.grimmory:pdfium4j:$pdfium4jVersion:${pdfiumNativesClassifier()}")
 
@@ -173,7 +173,7 @@ dependencies {
     implementation("org.freemarker:freemarker:2.3.35")
 
     // --- Jackson 3 ---
-    implementation(platform("tools.jackson:jackson-bom:3.2.2"))
+    implementation(platform("tools.jackson:jackson-bom:3.2.3"))
     implementation("tools.jackson.core:jackson-core")
     implementation("tools.jackson.core:jackson-databind")
 

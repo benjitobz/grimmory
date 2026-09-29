@@ -499,8 +499,6 @@
       },
       "sortFields": {
         "title": "Titre",
-        "fileName": "Nom de fichier",
-        "filePath": "Chemin du fichier",
         "addedOn": "Date d'ajout",
         "author": "Auteur",
         "authorSurnameVorname": "Auteur (Nom de famille)",
@@ -513,7 +511,6 @@
         "readStatus": "Statut de lecture",
         "dateFinished": "Date de fin",
         "readingProgress": "Progression de lecture",
-        "bookType": "Type de livre",
         "pageCount": ""
       },
       "sortDirections": {
@@ -529,8 +526,6 @@
       "sortOrderLabel": "Ordre de tri (glissez pour réordonner)",
       "ascending": "Croissant",
       "descending": "Décroissant",
-      "remove": "Retirer",
-      "addSortField": "Ajouter un champ de tri...",
       "autoSave": "Sauvegarde automatique à la navigation",
       "autoSaveDesc": "Enregistrer automatiquement les modifications lors de la navigation vers le livre précédent ou suivant dans l'éditeur de métadonnées.",
       "overrideManagement": "Gestion des remplacements",
@@ -546,34 +541,6 @@
       "saveSettings": "Enregistrer les paramètres",
       "saveSuccess": "Préférences enregistrées",
       "saveSuccessDetail": "Vos préférences de tri et d'affichage ont été enregistrées avec succès.",
-      "sortTitle": "Titre",
-      "sortFileName": "Nom de fichier",
-      "sortFilePath": "Chemin du fichier",
-      "sortAuthor": "Auteur",
-      "sortAuthorSurname": "Auteur (Nom de famille)",
-      "sortSeriesName": "Nom de la série",
-      "sortSeriesNumber": "Numéro de la série",
-      "sortLastRead": "Dernière lecture",
-      "sortPersonalRating": "Note personnelle",
-      "sortAddedOn": "Date d'ajout",
-      "sortFileSize": "Taille du fichier",
-      "sortLocked": "Verrouillé",
-      "sortPublisher": "Éditeur",
-      "sortPublishedDate": "Date de publication",
-      "sortAmazonRating": "Note Amazon",
-      "sortAmazonCount": "",
-      "sortGoodreadsRating": "Note Goodreads",
-      "sortGoodreadsCount": "",
-      "sortHardcoverRating": "Note Hardcover",
-      "sortHardcoverCount": "",
-      "sortRanobedbRating": "Note Ranobedb",
-      "sortReadStatus": "Statut de lecture",
-      "sortDateFinished": "Date de fin",
-      "sortReadingProgress": "Progression de lecture",
-      "sortBookType": "Type de livre",
-      "sortNarrator": "Narrateur",
-      "sortPages": "",
-      "sortRandom": "Aléatoire",
       "entityLibrary": "Bibliothèque",
       "entityShelf": "Étagère",
       "entityMagicShelf": "Étagère magique",
@@ -584,24 +551,7 @@
       "sortSavedDetail": "Configuration de tri enregistrée pour ce {{entityType}}.",
       "editSort": "Modifier le tri",
       "tableSortConfig": "Configuration de tri",
-      "visibleSortFields": "Champs de tri visibles",
-      "visibleSortFieldsDesc": "Choisissez quels champs de tri apparaissent dans le menu déroulant de tri du navigateur de livres et glissez pour réordonner.",
-      "sortFieldCount": "{{count}} sur {{total}} sélectionnés",
-      "resetToDefaults": "Réinitialiser par défaut"
-    },
-    "filter": {
-      "sectionTitle": "Préférences de filtre",
-      "sectionDesc": "Configurez les options par défaut pour les contrôles de filtre affichés dans la barre latérale.",
-      "filterMode": "Mode de filtre",
-      "filterModeDesc": "Choisissez le mode par défaut pour combiner les filtres sélectionnés depuis la barre latérale droite.",
-      "visibleFilters": "Filtres visibles",
-      "visibleFiltersDesc": "Choisissez quels filtres apparaissent dans la barre latérale et glissez pour réordonner. Entre {{min}} et {{max}} filtres.",
-      "selectionCount": "{{count}} sur {{total}} sélectionnés",
-      "addFilter": "Ajouter un filtre...",
-      "resetToDefaults": "Réinitialiser par défaut",
-      "modeAnd": "Et",
-      "modeOr": "Ou",
-      "modeSingle": "Simple"
+      "formatOverlay": "Superposition du type de livre"
     },
     "sidebarSort": {
       "sectionTitle": "Préférence de tri de la barre latérale",
@@ -1805,6 +1755,9 @@
         "parse": "",
         "pattern": "",
         "required": ""
+      },
+      "bulkActions": {
+        "selectAll": "Tout sélectionner"
       }
     }
   },
@@ -2785,68 +2738,20 @@
         "customCoverHeader": "Confirmer la génération de couvertures personnalisées"
       },
       "toast": {
-        "sortSavedSummary": "Tri enregistré",
-        "sortSavedGlobalDetail": "Configuration de tri par défaut enregistrée.",
-        "sortSavedEntityDetail": "Configuration de tri enregistrée pour ce {{ entityType }}.",
         "regenCoverStartedSummary": "Régénération des couvertures lancée",
         "regenCoverStartedDetail": "Régénération des couvertures pour {{ count }} livre(s). Rafraîchissez la page une fois terminé.",
         "customCoverStartedSummary": "Génération de couvertures personnalisées lancée",
         "customCoverStartedDetail": "Génération de couvertures personnalisées pour {{ count }} livre(s).",
         "failedSummary": "Échec",
         "regenCoverFailedDetail": "Impossible de lancer la régénération des couvertures.",
-        "customCoverFailedDetail": "Impossible de lancer la génération de couvertures personnalisées.",
-        "unshelveSuccessDetail": "Étagères des livres mises à jour",
-        "unshelveFailedDetail": "Échec de la mise à jour des étagères des livres",
-        "noEligibleBooksSummary": "Aucun livre éligible",
-        "noEligibleBooksDetail": "Les livres sélectionnés doivent être des livres à fichier unique (pas de formats alternatifs).",
-        "multipleLibrariesSummary": "Bibliothèques multiples",
-        "multipleLibrariesDetail": "Tous les livres sélectionnés doivent provenir de la même bibliothèque."
+        "customCoverFailedDetail": "Impossible de lancer la génération de couvertures personnalisées."
       },
       "loading": {
-        "deleting": "Suppression de {{ count }} livre(s)...",
-        "unshelving": "Retrait de {{ count }} livre(s) des étagères..."
+        "deleting": "Suppression de {{ count }} livre(s)..."
       },
       "labels": {
         "allBooks": "Tous les livres",
-        "unshelvedBooks": "Livres sans étagère",
-        "unshelvedBooksFiltered": "Livres sans étagère (filtrés)",
-        "filteredSuffix": "(Filtrés)",
-        "seriesCollapsedInfo": "Affichage de {{ count }} {{ itemWord }} (séries regroupées)",
-        "item": "élément",
-        "items": "éléments",
-        "selected": "sélectionné(s)",
-        "setAsDefault": "Définir par défaut ?",
-        "save": "Enregistrer",
-        "collapseSeries": "Regrouper les séries",
-        "gridColumns": "Colonnes de la grille",
-        "bookTypeOverlay": "Superposition du type de livre",
-        "noBooks": "Cette collection ne contient aucun livre !",
-        "failedLibrary": "Échec du chargement des livres de la bibliothèque !",
-        "failedShelf": "Échec du chargement des livres de l'étagère !",
-        "failedBooks": "",
-        "activeFilters": "{{ count }} filtres actifs"
-      },
-      "tooltip": {
-        "clearFilters": "Effacer les filtres appliqués",
-        "visibleColumns": "Colonnes visibles",
-        "selectSorting": "Sélectionner le tri",
-        "toggleView": "Basculer entre vue grille et tableau",
-        "search": "Rechercher",
-        "toggleSidebar": "Afficher/masquer les filtres latéraux",
-        "metadataActions": "Actions sur les métadonnées",
-        "assignToShelf": "Assigner à une étagère",
-        "removeFromShelf": "Retirer de cette étagère",
-        "lockUnlockMetadata": "Verrouiller/Déverrouiller les métadonnées",
-        "organizeFiles": "Organiser les fichiers",
-        "attachToBook": "Joindre à un autre livre",
-        "moreActions": "Plus d'actions",
-        "selectAll": "Sélectionner tous les livres",
-        "deselectAll": "Désélectionner tous les livres",
-        "deleteSelected": "Supprimer les livres sélectionnés"
-      },
-      "placeholder": {
-        "selectColumns": "Sélectionner les colonnes",
-        "search": "Titre, auteur, série, genre ou ISBN..."
+        "unshelvedBooks": "Livres sans étagère"
       }
     },
     "card": {
@@ -3087,7 +2992,8 @@
         "customFetchMetadata": "Récupération personnalisée des métadonnées",
         "autoFetchMetadata": "Récupération automatique des métadonnées",
         "findDuplicates": "Rechercher les doublons",
-        "deleteLibrary": "Supprimer la bibliothèque"
+        "deleteLibrary": "Supprimer la bibliothèque",
+        "manageLibrary": "Gérer la bibliothèque"
       },
       "shelf": {
         "publicShelfPrefix": "Étagère publique - ",
@@ -3128,48 +3034,12 @@
         "deletingLibrary": "Suppression de la bibliothèque '{{ name }}'..."
       }
     },
-    "columnPref": {
-      "columns": {
-        "readStatus": "Lu",
-        "title": "Titre",
-        "authors": "Auteurs",
-        "publisher": "Éditeur",
-        "seriesName": "Série",
-        "seriesNumber": "N° de série",
-        "categories": "",
-        "publishedDate": "Publié",
-        "lastReadTime": "Dernière lecture",
-        "addedOn": "Ajouté",
-        "fileName": "Nom du fichier",
-        "fileSizeKb": "Taille du fichier",
-        "language": "Langue",
-        "isbn": "",
-        "pageCount": "",
-        "amazonRating": "",
-        "amazonReviewCount": "",
-        "goodreadsRating": "",
-        "goodreadsReviewCount": "",
-        "hardcoverRating": "",
-        "hardcoverReviewCount": "",
-        "ranobedbRating": ""
-      },
-      "toast": {
-        "savedSummary": "Préférences enregistrées",
-        "savedDetail": "Votre disposition de colonnes a été enregistrée."
-      }
-    },
     "coverPref": {
       "toast": {
         "savedSummary": "Taille de couverture enregistrée",
         "savedDetail": "Taille de couverture définie à {{ scale }}x.",
         "saveFailedSummary": "Échec de l'enregistrement",
         "saveFailedDetail": "Impossible d'enregistrer la préférence de taille de couverture localement."
-      }
-    },
-    "filterPref": {
-      "toast": {
-        "saveFailedSummary": "Échec de l'enregistrement",
-        "saveFailedDetail": "Impossible d'enregistrer la préférence de filtre latéral localement."
       }
     },
     "reviews": {
@@ -3329,41 +3199,7 @@
       }
     },
     "filter": {
-      "title": "Filtres",
       "showingFirst100": "Affichage des 100 premiers éléments",
-      "footerNote": "Note : Les 100 premiers éléments sont affichés par catégorie de filtre",
-      "labels": {
-        "author": "Auteur",
-        "category": "",
-        "series": "Série",
-        "bookType": "Type de livre",
-        "readStatus": "Statut de lecture",
-        "personalRating": "Note personnelle",
-        "publisher": "Éditeur",
-        "matchScore": "Score de correspondance des métadonnées",
-        "library": "Bibliothèque",
-        "shelf": "Étagère",
-        "shelfStatus": "Statut d'étagère",
-        "tag": "",
-        "publishedDate": "Année de publication",
-        "fileSize": "Taille du fichier",
-        "amazonRating": "Note Amazon",
-        "goodreadsRating": "Note Goodreads",
-        "hardcoverRating": "Note Hardcover",
-        "lubimyczytacRating": "Note Lubimyczytac",
-        "ranobedbRating": "Note RanobeDB",
-        "audibleRating": "Note Audible",
-        "language": "Langue",
-        "pageCount": "Nombre de pages",
-        "mood": "Humeur",
-        "ageRating": "Classification d'âge",
-        "contentRating": "Classification de contenu",
-        "narrator": "Narrateur",
-        "comicCharacter": "Personnage de BD",
-        "comicTeam": "Équipe de BD",
-        "comicLocation": "Lieu de BD",
-        "comicCreator": "Créateur de BD"
-      },
       "readStatus": {
         "unread": "Non lu",
         "reading": "En lecture",
@@ -3416,14 +3252,6 @@
       "shelfStatus": {
         "shelved": "Sur une étagère",
         "unshelved": "Sans étagère"
-      },
-      "comicRoles": {
-        "penciller": "Dessinateur",
-        "inker": "Encreur",
-        "colorist": "Coloriste",
-        "letterer": "Lettreur",
-        "coverArtist": "Artiste de couverture",
-        "editor": "Éditeur"
       }
     },
     "shelfAssigner": {
@@ -3486,27 +3314,6 @@
         "updateFailedDetail": "Une erreur est survenue lors de la mise à jour de l'étagère. Veuillez réessayer."
       }
     },
-    "table": {
-      "label": "",
-      "bookCoverAlt": "Couverture du livre",
-      "selectBook": "Sélectionner {{ title }}",
-      "selectBookFallback": "Sélectionner un livre",
-      "noRating": "Pas de note",
-      "ratingOutOf": "",
-      "statusWithPrefix": "Statut : {{ status }}",
-      "locked": "Verrouillé",
-      "unlocked": "Déverrouillé",
-      "toast": {
-        "metadataLockedSummary": "Métadonnées verrouillées",
-        "metadataLockedDetail": "Les métadonnées du livre ont été verrouillées avec succès.",
-        "metadataUnlockedSummary": "Métadonnées déverrouillées",
-        "metadataUnlockedDetail": "Les métadonnées du livre ont été déverrouillées avec succès.",
-        "lockFailedSummary": "Échec du verrouillage",
-        "lockFailedDetail": "Une erreur est survenue lors du verrouillage des métadonnées.",
-        "unlockFailedSummary": "Échec du déverrouillage",
-        "unlockFailedDetail": "Une erreur est survenue lors du déverrouillage des métadonnées."
-      }
-    },
     "lockUnlockDialog": {
       "title": "Verrouiller ou déverrouiller les métadonnées",
       "selectedCount": "{{ count }} livre(s) sélectionné(s)",
@@ -3527,42 +3334,7 @@
       }
     },
     "sorting": {
-      "sortOrder": "Ordre de tri",
-      "removeTooltip": "Retirer",
-      "addSortFieldPlaceholder": "Ajouter un champ de tri...",
-      "saveAsDefault": "Enregistrer par défaut",
-      "ascendingTooltip": "Croissant - cliquez pour changer",
-      "descendingTooltip": "Décroissant - cliquez pour changer",
-      "options": {
-        "title": "Titre",
-        "fileName": "Nom du fichier",
-        "filePath": "Chemin du fichier",
-        "author": "Auteur",
-        "authorSurnameVorname": "Auteur (nom de famille)",
-        "seriesName": "Nom de la série",
-        "seriesNumber": "Numéro de la série",
-        "lastReadTime": "Dernière lecture",
-        "personalRating": "Note personnelle",
-        "addedOn": "Date d'ajout",
-        "fileSizeKb": "Taille du fichier",
-        "locked": "Verrouillé",
-        "publisher": "Éditeur",
-        "publishedDate": "Date de publication",
-        "readStatus": "Statut de lecture",
-        "dateFinished": "Date de fin",
-        "readingProgress": "Progression de lecture",
-        "bookType": "Type de livre",
-        "amazonRating": "Note Amazon",
-        "amazonReviewCount": "",
-        "goodreadsRating": "Note Goodreads",
-        "goodreadsReviewCount": "",
-        "hardcoverRating": "Note Hardcover",
-        "hardcoverReviewCount": "",
-        "ranobedbRating": "Note Ranobedb",
-        "narrator": "Narrateur",
-        "pageCount": "",
-        "random": "Aléatoire"
-      }
+      "saveAsDefault": "Enregistrer par défaut"
     },
     "fileAttacher": {
       "title": "Joindre le fichier à un autre livre",
@@ -3726,6 +3498,57 @@
         "mergeFailedDetail": "Impossible de fusionner ce groupe.",
         "mergePartialDetail": "{{ success }} fusionné(s), {{ failed }} échoué(s)."
       }
+    },
+    "viewMode": {
+      "grid": "Grille",
+      "table": "Tableau"
+    },
+    "fields": {
+      "random": "Aléatoire",
+      "title": "Titre",
+      "author": "Auteur",
+      "authorSurname": "Auteur (nom de famille)",
+      "genre": "Genre",
+      "series": "Série",
+      "seriesNumber": "Numéro de la série",
+      "publisher": "Éditeur",
+      "tag": "Tag",
+      "mood": "Humeur",
+      "language": "Langue",
+      "narrator": "Narrateur",
+      "fileType": "Type de livre",
+      "readStatus": "Statut de lecture",
+      "personalRating": "Note personnelle",
+      "amazonRating": "Note Amazon",
+      "amazonReviewCount": "Amazon #",
+      "goodreadsRating": "Note Goodreads",
+      "goodreadsReviewCount": "Goodreads #",
+      "hardcoverRating": "Note Hardcover",
+      "hardcoverReviewCount": "Hardcover #",
+      "ranobedbRating": "Note RanobeDB",
+      "lubimyczytacRating": "Note Lubimyczytac",
+      "audibleRating": "Note Audible",
+      "pageCount": "Pages",
+      "publishedDate": "Date de publication",
+      "publishedYear": "Année de publication",
+      "addedOn": "Date d'ajout",
+      "lastReadTime": "Dernière lecture",
+      "dateFinished": "Date de fin",
+      "readingProgress": "Progression de lecture",
+      "fileName": "Nom du fichier",
+      "fileSize": "Taille du fichier",
+      "isbn": "ISBN",
+      "library": "Bibliothèque",
+      "shelf": "Étagère",
+      "ageRating": "Classification d'âge",
+      "contentRating": "Classification de contenu",
+      "matchScore": "Score de correspondance des métadonnées",
+      "shelfStatus": "Statut d'étagère",
+      "comicCharacter": "Personnage de BD",
+      "comicTeam": "Équipe de BD",
+      "comicLocation": "Lieu de BD",
+      "comicCreator": "Créateur de BD",
+      "audibleReviewCount": "Nombre d'avis Audible"
     }
   },
   "readerAudiobook": {
@@ -5391,6 +5214,27 @@
         "matchFailedSummary": "",
         "matchFailedDetail": ""
       }
+    }
+  },
+  "browse": {
+    "showAll": "Tout afficher",
+    "moreActions": "Plus d'actions",
+    "rail": {
+      "noMatches": "Aucun résultat"
+    },
+    "bulk": {
+      "organizeFiles": "Organiser les fichiers",
+      "updateReadStatus": "Mettre à jour le statut de lecture",
+      "lockUnlockMetadata": "Verrouiller/Déverrouiller les métadonnées"
+    },
+    "toolbar": {
+      "columnGroups": {
+        "file": "Fichier",
+        "ratings": "Notes"
+      },
+      "viewMode": "Affichage",
+      "density": "Taille",
+      "resetColumns": "Réinitialiser par défaut"
     }
   }
 }
