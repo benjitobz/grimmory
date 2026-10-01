@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ShelfType {
-    KOBO(koboShelfName(), "kobo-white", IconType.CUSTOM_SVG);
+    KOBO("Kobo", "kobo-white", IconType.CUSTOM_SVG);
 
     private final String name;
     private final String icon;
@@ -14,10 +14,5 @@ public enum ShelfType {
         this.name = name;
         this.icon = icon;
         this.iconType = iconType;
-    }
-
-    private static String koboShelfName() {
-        String configured = System.getenv("KOBO_SHELF_NAME");
-        return configured == null || configured.isBlank() ? "Kobo" : configured.trim();
     }
 }
