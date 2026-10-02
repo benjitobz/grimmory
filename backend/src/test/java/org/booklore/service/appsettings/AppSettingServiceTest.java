@@ -2,6 +2,7 @@ package org.booklore.service.appsettings;
 
 import org.booklore.config.AppProperties;
 import org.booklore.config.security.service.AuthenticationService;
+import org.booklore.exception.APIException;
 import org.booklore.model.dto.BookLoreUser;
 import org.booklore.model.dto.settings.AppSettingKey;
 import org.booklore.model.dto.settings.PublicAppSetting;
@@ -30,6 +31,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,6 +117,43 @@ class AppSettingServiceTest {
             assertThat(event.before().effectiveShelfName()).isEqualTo(KoreaderSyncSettings.DEFAULT_SHELF_NAME);
             assertThat(event.after().isExternalServerEnabled()).isTrue();
             assertThat(event.after().effectiveShelfName()).isEqualTo("Devices");
+        }
+
+        @Test
+        void updateSetting_rejectsAnExternalKoreaderServerThatIsNotAnHttpUrl() {
+            assertThatThrownBy(() -> appSettingService.updateSetting(AppSettingKey.KOREADER_SYNC_SETTINGS,
+                    Map.of("externalServerEnabled", true, "externalServerUrl", "sync.example")))
+                    .isInstanceOf(APIException.class);
+
+            verify(appSettingsRepository, never()).save(any());
+        }
+
+        @Test
+        void updateSetting_acceptsABlankUrlWhileExternalSyncIsOff() throws Exception {
+            appSettingService.updateSetting(AppSettingKey.KOREADER_SYNC_SETTINGS,
+                    Map.of("externalServerEnabled", false, "externalServerUrl", ""));
+
+            verify(appSettingsRepository).save(any());
+        }
+
+        @Test
+        void updateSetting_leavesTheCacheAloneWhenShelfReconciliationFails() {
+            AppSettingEntity stored = new AppSettingEntity();
+            stored.setName(AppSettingKey.KOREADER_SYNC_SETTINGS.toString());
+            stored.setVal("{\"externalServerEnabled\":false}");
+            when(appSettingsRepository.findByName(AppSettingKey.KOREADER_SYNC_SETTINGS.toString())).thenReturn(stored);
+            doThrow(new IllegalStateException("reconcile failed")).when(eventPublisher).publishEvent(any(KoreaderSyncSettingsChangedEvent.class));
+
+            assertThatThrownBy(() -> appSettingService.updateSetting(AppSettingKey.KOREADER_SYNC_SETTINGS,
+                    Map.of("externalServerEnabled", true, "externalServerUrl", "https://sync.example")))
+                    .isInstanceOf(IllegalStateException.class);
+
+            AppSettingEntity committed = new AppSettingEntity();
+            committed.setName(AppSettingKey.KOREADER_SYNC_SETTINGS.toString());
+            committed.setVal("{\"externalServerEnabled\":false}");
+            when(appSettingsRepository.findAll()).thenReturn(List.of(committed));
+            when(appProperties.getRemoteAuth()).thenReturn(new AppProperties.RemoteAuth());
+            assertThat(appSettingService.getPublicSettings().getKoreaderSyncUrlOverride()).isNull();
         }
 
         @Test

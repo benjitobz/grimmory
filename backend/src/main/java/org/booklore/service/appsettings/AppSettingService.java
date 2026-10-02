@@ -30,6 +30,7 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.type.TypeFactory;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -82,6 +83,10 @@ public class AppSettingService {
             validateOidcForceOnlyMode(val);
         }
 
+        if (key == AppSettingKey.KOREADER_SYNC_SETTINGS) {
+            validateKoreaderSyncSettings(val);
+        }
+
         var setting = appSettingsRepository.findByName(key.toString());
         String previousValue = setting == null ? null : setting.getVal();
 
@@ -100,8 +105,6 @@ public class AppSettingService {
 
         appSettingsRepository.save(setting);
 
-        cachedSettings.put(key, Optional.ofNullable(setting.getVal()));
-
         AuditAction action = switch (key) {
             case AppSettingKey k when k == AppSettingKey.OIDC_FORCE_ONLY_MODE -> AuditAction.OIDC_FORCE_ONLY_MODE_CHANGED;
             case AppSettingKey k when k.name().startsWith("OIDC_") -> AuditAction.OIDC_CONFIG_CHANGED;
@@ -112,6 +115,28 @@ public class AppSettingService {
         if (key == AppSettingKey.KOREADER_SYNC_SETTINGS) {
             KoreaderSyncSettings after = val == null ? new KoreaderSyncSettings() : objectMapper.convertValue(val, KoreaderSyncSettings.class);
             eventPublisher.publishEvent(new KoreaderSyncSettingsChangedEvent(parseKoreaderSyncSettings(previousValue), after));
+        }
+
+        cachedSettings.put(key, Optional.ofNullable(setting.getVal()));
+    }
+
+    private void validateKoreaderSyncSettings(Object val) {
+        if (val == null) {
+            return;
+        }
+        KoreaderSyncSettings settings = objectMapper.convertValue(val, KoreaderSyncSettings.class);
+        if (!settings.isExternalServerEnabled()) {
+            return;
+        }
+        String url = settings.getExternalServerUrl() == null ? "" : settings.getExternalServerUrl().trim();
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw ApiError.GENERIC_BAD_REQUEST.createException("The external KOReader sync server URL is invalid");
+        }
+        if (uri.getHost() == null || !("http".equalsIgnoreCase(uri.getScheme()) || "https".equalsIgnoreCase(uri.getScheme()))) {
+            throw ApiError.GENERIC_BAD_REQUEST.createException("The external KOReader sync server must be an http(s) URL");
         }
     }
 

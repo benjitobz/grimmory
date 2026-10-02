@@ -65,6 +65,18 @@ class BundledIconServiceTest {
     }
 
     @Test
+    void aLeftoverPartialCopyDoesNotBlockTheInstall() throws Exception {
+        Files.createDirectories(iconDir);
+        Path partial = iconDir.resolve(BundledIconService.KOREADER_ICON + ".svg.part");
+        Files.writeString(partial, "<svg");
+
+        service.seedBundledIcons();
+
+        assertTrue(Files.readString(iconDir.resolve(BundledIconService.KOREADER_ICON + ".svg")).contains("</svg>"));
+        assertFalse(Files.exists(partial));
+    }
+
+    @Test
     void seedingTwiceChangesNothingTheSecondTime() throws Exception {
         service.seedBundledIcons();
         Path file = iconDir.resolve(BundledIconService.KOREADER_ICON + ".svg");

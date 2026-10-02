@@ -229,6 +229,7 @@
                     pInputText
                     class="url-input"
                     [(ngModel)]="koreaderSyncSettings.externalServerUrl"
+                    [attr.aria-label]="t('koreaderSync.serverUrlLabel')"
                     [placeholder]="t('koreaderSync.serverUrlPlaceholder')"/>
                   <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveKoreaderSync()"></p-button>
                 </div>
@@ -263,6 +264,7 @@
                     type="text"
                     pInputText
                     [(ngModel)]="koreaderSyncSettings.shelfName"
+                    [attr.aria-label]="t('koreaderSync.shelfNameLabel')"
                     [placeholder]="t('koreaderSync.shelfNamePlaceholder')"/>
                   <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveKoreaderSync()"></p-button>
                 </div>

@@ -56,10 +56,14 @@ public class KoreaderUserService {
     private KoreaderUserEntity initialiseManagedLogin(BookLoreUser actor) {
         BookLoreUserEntity owner = userRepository.findById(actor.getId())
                 .orElseThrow(() -> ApiError.USER_NOT_FOUND.createException(actor.getId()));
-        String username = actor.getEmail() != null && !actor.getEmail().isBlank()
+        String base = actor.getEmail() != null && !actor.getEmail().isBlank()
                 ? actor.getEmail().trim() : actor.getUsername();
+        String username = base;
         if (koreaderUserRepository.findByUsername(username).isPresent()) {
-            username = username + "-" + actor.getId();
+            username = base + "-" + actor.getId();
+        }
+        for (int n = 2; koreaderUserRepository.findByUsername(username).isPresent(); n++) {
+            username = base + "-" + actor.getId() + "-" + n;
         }
         String code = generateSyncCode();
         KoreaderUserEntity user = new KoreaderUserEntity();

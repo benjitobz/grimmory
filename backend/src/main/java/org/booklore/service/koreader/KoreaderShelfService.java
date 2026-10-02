@@ -73,13 +73,13 @@ public class KoreaderShelfService {
     }
 
     void removeShelvesForAllUsers(String name) {
-        List<ShelfEntity> shelves = shelfRepository.findByName(name);
+        List<ShelfEntity> shelves = managedShelves(name);
         shelfRepository.deleteAll(shelves);
         log.info("KOReader shelf '{}' removed for {} users", name, shelves.size());
     }
 
     void renameShelves(String oldName, String newName) {
-        for (ShelfEntity shelf : shelfRepository.findByName(oldName)) {
+        for (ShelfEntity shelf : managedShelves(oldName)) {
             Long userId = shelf.getUser().getId();
             if (shelfRepository.existsByUserIdAndName(userId, newName)) {
                 log.warn("User {} already has a shelf named '{}'; leaving '{}' in place", userId, newName, oldName);
@@ -88,6 +88,12 @@ public class KoreaderShelfService {
             shelf.setName(newName);
             shelfRepository.save(shelf);
         }
+    }
+
+    private List<ShelfEntity> managedShelves(String name) {
+        return shelfRepository.findByName(name).stream()
+                .filter(shelf -> BundledIconService.KOREADER_ICON.equals(shelf.getIcon()) && shelf.getIconType() == IconType.CUSTOM_SVG)
+                .toList();
     }
 
     private boolean ensureShelf(BookLoreUserEntity user, String name) {

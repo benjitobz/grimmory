@@ -8,6 +8,7 @@ import org.booklore.model.dto.Shelf;
 import org.booklore.model.dto.request.ShelfCreateRequest;
 import org.booklore.model.entity.KoboUserSettingsEntity;
 import org.booklore.model.entity.ShelfEntity;
+import org.booklore.model.enums.IconType;
 import org.booklore.model.enums.ShelfType;
 import org.booklore.repository.KoboUserSettingsRepository;
 import org.booklore.service.ShelfService;
@@ -22,6 +23,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class KoboSettingsService {
+
+    private static final String PREVIOUS_KOBO_ICON = "tablet";
 
     private final KoboUserSettingsRepository repository;
     private final AuthenticationService authenticationService;
@@ -108,6 +111,14 @@ public class KoboSettingsService {
                             .iconType(ShelfType.KOBO.getIconType())
                             .build()
             );
+        } else if (PREVIOUS_KOBO_ICON.equals(shelf.get().getIcon()) && shelf.get().getIconType() == IconType.LUCIDE) {
+            ShelfEntity existing = shelf.get();
+            shelfService.updateShelf(existing.getId(), ShelfCreateRequest.builder()
+                    .name(existing.getName())
+                    .icon(ShelfType.KOBO.getIcon())
+                    .iconType(ShelfType.KOBO.getIconType())
+                    .publicShelf(existing.isPublic())
+                    .build());
         }
     }
 
