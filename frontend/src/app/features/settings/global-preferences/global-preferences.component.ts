@@ -46,7 +46,8 @@ export class GlobalPreferencesComponent implements OnInit {
   koreaderSyncSettings: KoreaderSyncSettings = {
     externalServerEnabled: false,
     externalServerUrl: '',
-    shelfName: 'KOReader'
+    shelfName: 'KOReader',
+    usersCanEditLogin: false
   };
 
   private appSettingsService = inject(AppSettingsService);

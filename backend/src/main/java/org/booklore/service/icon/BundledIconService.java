@@ -14,12 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * Custom SVG icons this fork ships with. They are copied into the icons folder
- * of the data directory on startup when they are not already there, so a shelf
- * that names one always has a file behind it, on a fresh deployment too. An
- * icon a user has edited or replaced is never overwritten.
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j

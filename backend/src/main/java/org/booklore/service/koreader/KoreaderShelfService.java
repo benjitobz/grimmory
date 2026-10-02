@@ -18,19 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Every reader owns a KOReader shelf while BookBridge handles KOReader sync
- * (KOREADER_SYNC_SETTINGS.externalServerEnabled); BookBridge delivers the
- * books on it to the reader's device. Mirrors the Kobo shelf: created when the
- * feature turns on and for every new user, removed when it turns off, renamed
- * when the configured name changes.
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class KoreaderShelfService {
-
-    static final String SHELF_ICON = BundledIconService.KOREADER_ICON;
 
     private final ShelfRepository shelfRepository;
     private final UserRepository userRepository;
@@ -106,7 +97,7 @@ public class KoreaderShelfService {
         shelfRepository.save(ShelfEntity.builder()
                 .user(user)
                 .name(name)
-                .icon(SHELF_ICON)
+                .icon(BundledIconService.KOREADER_ICON)
                 .iconType(IconType.CUSTOM_SVG)
                 .build());
         return true;

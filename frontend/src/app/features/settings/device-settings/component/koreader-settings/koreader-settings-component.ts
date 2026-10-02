@@ -43,6 +43,7 @@ export class KoreaderSettingsComponent {
   private readonly appSettingsService = inject(AppSettingsService);
   readonly externalSyncUrl = computed(() => this.appSettingsService.publicAppSettings()?.koreaderSyncUrlOverride?.trim() || null);
   readonly koreaderEndpoint = computed(() => this.externalSyncUrl() ?? `${window.location.origin}/api/koreader`);
+  readonly loginEditable = computed(() => !this.externalSyncUrl() || !!this.appSettingsService.publicAppSettings()?.koreaderUsersCanEditLogin);
 
   private readonly messageService = inject(MessageService);
   private readonly koreaderService = inject(KoreaderService);

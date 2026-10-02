@@ -153,6 +153,7 @@ export interface KoreaderSyncSettings {
   externalServerEnabled: boolean;
   externalServerUrl: string;
   shelfName: string;
+  usersCanEditLogin: boolean;
 }
 
 export interface KoboSettings {

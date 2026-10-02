@@ -3,11 +3,13 @@
 Keeps this fork tracking `grimmory-tools/grimmory` and publishes images that carry the
 embedded MariaDB patch (`Dockerfile` + `packaging/docker/entrypoint.sh`).
 
-Small patches ride along (all default to upstream behaviour):
+Feature patches ride along (all default to upstream behaviour). They are proposed upstream from
+`feat/external-koreader-sync`; keep that branch and this one identical for these files.
 
 | Patch | Files | Why |
 | --- | --- | --- |
-| admin setting `KOREADER_SYNC_SETTINGS` (Applications page: "Use BookBridge for KOReader sync" + URL, stored in `app_settings`, no migration): the KOReader device page shows that server, keeps the reader's login read-only and hides the built-in toggles; `PUT /api/v1/koreader-users/me` is refused for non-admins while it is on | `AppSettingKey`, `KoreaderSyncSettings`, `AppSettings`, `AppSettingService`, `KoreaderUserService`, `app-settings.*`, `global-preferences.component.*`, `koreader-settings-component.html`, `i18n/*.json` | readers get their KOReader/BookBridge sync details from Grimmory; provisioning issues the sync codes and BookBridge mirrors them |
+| admin setting `KOREADER_SYNC_SETTINGS` (Application page, "External KOReader Sync": "Use BookBridge or external for KOReader Sync" + URL + KOReader shelf name + "Let users edit their KOReader login", stored in `app_settings`, no migration): the KOReader device page shows that server and hides the built-in toggles; the reader's login is created by the server and read-only unless user edits are allowed (`PUT /api/v1/koreader-users/me` is refused for non-admins otherwise) | `AppSettingKey`, `KoreaderSyncSettings`, `AppSettings`, `PublicAppSetting`, `AppSettingService`, `KoreaderUserService`, `KoreaderShelfService`, `app-settings.*`, `global-preferences.component.*`, `koreader-settings-component.*`, `i18n/en.json` | readers get their KOReader/BookBridge sync details from Grimmory; provisioning issues the sync codes and BookBridge mirrors them |
+| bundled shelf icons (Kobo, KOReader, Audiobookshelf) copied into the icons folder at startup; the Kobo sync shelf uses the Kobo icon | `BundledIconService`, `resources/bundled-icons/*.svg`, `ShelfType`, `KoboSettingsService` | the device shelves get recognisable icons on a fresh install |
 
 ## Branches
 

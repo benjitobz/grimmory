@@ -14,6 +14,7 @@ export interface PublicAppSettings {
   oidcProviderDetails: OidcProviderDetails;
   oidcForceOnlyMode: boolean;
   koreaderSyncUrlOverride?: string | null;
+  koreaderUsersCanEditLogin?: boolean;
 }
 
 @Injectable({providedIn: 'root'})
@@ -82,13 +83,15 @@ export class AppSettingsService {
       remoteAuthEnabled: appSettings.remoteAuthEnabled,
       oidcProviderDetails: appSettings.oidcProviderDetails,
       oidcForceOnlyMode: appSettings.oidcForceOnlyMode,
-      koreaderSyncUrlOverride: externalUrl || null
+      koreaderSyncUrlOverride: externalUrl || null,
+      koreaderUsersCanEditLogin: !!(koreaderSync?.externalServerEnabled && koreaderSync.usersCanEditLogin)
     };
 
     if (
       !current ||
       current.oidcEnabled !== updatedPublicSettings.oidcEnabled ||
       (current.koreaderSyncUrlOverride ?? null) !== updatedPublicSettings.koreaderSyncUrlOverride ||
+      (current.koreaderUsersCanEditLogin ?? false) !== updatedPublicSettings.koreaderUsersCanEditLogin ||
       current.remoteAuthEnabled !== updatedPublicSettings.remoteAuthEnabled ||
       current.oidcForceOnlyMode !== updatedPublicSettings.oidcForceOnlyMode ||
       JSON.stringify(current.oidcProviderDetails) !== JSON.stringify(updatedPublicSettings.oidcProviderDetails)

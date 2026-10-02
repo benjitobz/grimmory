@@ -227,6 +227,7 @@
                   <input
                     type="text"
                     pInputText
+                    class="url-input"
                     [(ngModel)]="koreaderSyncSettings.externalServerUrl"
                     [placeholder]="t('koreaderSync.serverUrlPlaceholder')"/>
                   <p-button [label]="'common.save' | transloco" outlined severity="success" (onClick)="saveKoreaderSync()"></p-button>
@@ -235,6 +236,21 @@
               <p class="setting-description">
                 <i class="pi pi-info-circle"></i>
                 {{ t('koreaderSync.serverUrlDesc') }}
+              </p>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label-row">
+                <span class="setting-label">{{ t('koreaderSync.userEditsLabel') }}</span>
+                <p-toggleswitch
+                  [(ngModel)]="koreaderSyncSettings.usersCanEditLogin"
+                  (onChange)="koreaderSyncSettings.usersCanEditLogin = $event.checked; saveKoreaderSync()">
+                </p-toggleswitch>
+              </div>
+              <p class="setting-description">
+                <i class="pi pi-info-circle"></i>
+                {{ t('koreaderSync.userEditsDesc') }}
               </p>
             </div>
           </div>
