@@ -61,6 +61,7 @@ function buildAppSettings(overrides: Partial<AppSettings> = {}): AppSettings {
       providers: [],
     },
     koboSettings: {} as never,
+    koreaderSyncSettings: {} as never,
     coverCroppingSettings: {} as never,
     metadataDownloadOnBookdrop: false,
     metadataProviderSpecificFields: {} as never,
