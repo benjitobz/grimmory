@@ -129,6 +129,15 @@ class AppSettingServiceTest {
         }
 
         @Test
+        void updateSetting_rejectsABlankUrlWhileExternalSyncIsOn() {
+            assertThatThrownBy(() -> appSettingService.updateSetting(AppSettingKey.KOREADER_SYNC_SETTINGS,
+                    Map.of("externalServerEnabled", true, "externalServerUrl", "  ")))
+                    .isInstanceOf(APIException.class);
+
+            verify(appSettingsRepository, never()).save(any());
+        }
+
+        @Test
         void updateSetting_acceptsABlankUrlWhileExternalSyncIsOff() throws Exception {
             appSettingService.updateSetting(AppSettingKey.KOREADER_SYNC_SETTINGS,
                     Map.of("externalServerEnabled", false, "externalServerUrl", ""));

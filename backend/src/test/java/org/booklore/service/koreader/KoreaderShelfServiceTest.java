@@ -107,25 +107,19 @@ class KoreaderShelfServiceTest {
     }
 
     @Test
-    void turningTheFeatureOffRemovesEveryUsersShelf() {
-        List<ShelfEntity> shelves = List.of(shelf(user(1L), "KOReader"), shelf(user(2L), "KOReader"));
-        when(shelfRepository.findByName("KOReader")).thenReturn(shelves);
-
+    void turningTheFeatureOffKeepsEveryShelf() {
         service.onSettingsChanged(new KoreaderSyncSettingsChangedEvent(settings(true, null), settings(false, null)));
 
-        verify(shelfRepository).deleteAll(shelves);
-        verify(shelfRepository, never()).save(any());
+        verifyNoInteractions(shelfRepository);
     }
 
     @Test
-    void aShelfTheReaderMadeWithTheSameNameIsNeverRemovedOrRenamed() {
+    void aShelfTheReaderMadeWithTheSameNameIsNeverRenamed() {
         ShelfEntity personal = ShelfEntity.builder().id(300L).user(user(3L)).name("KOReader").icon("book").iconType(IconType.LUCIDE).build();
         when(shelfRepository.findByName("KOReader")).thenReturn(List.of(personal));
 
-        service.onSettingsChanged(new KoreaderSyncSettingsChangedEvent(settings(true, "KOReader"), settings(false, "KOReader")));
         service.onSettingsChanged(new KoreaderSyncSettingsChangedEvent(settings(true, "KOReader"), settings(true, "Devices")));
 
-        verify(shelfRepository).deleteAll(List.of());
         verify(shelfRepository, never()).save(personal);
         assertEquals("KOReader", personal.getName());
     }

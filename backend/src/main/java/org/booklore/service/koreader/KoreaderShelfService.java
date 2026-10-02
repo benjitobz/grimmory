@@ -16,7 +16,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +45,6 @@ public class KoreaderShelfService {
         String newName = event.after().effectiveShelfName();
         if (isOn && !wasOn) {
             ensureShelvesForAllUsers(newName);
-        } else if (wasOn && !isOn) {
-            removeShelvesForAllUsers(oldName);
         } else if (isOn && !oldName.equals(newName)) {
             renameShelves(oldName, newName);
             ensureShelvesForAllUsers(newName);
@@ -72,14 +69,11 @@ public class KoreaderShelfService {
         log.info("KOReader shelf '{}' present for every user ({} created)", name, created);
     }
 
-    void removeShelvesForAllUsers(String name) {
-        List<ShelfEntity> shelves = managedShelves(name);
-        shelfRepository.deleteAll(shelves);
-        log.info("KOReader shelf '{}' removed for {} users", name, shelves.size());
-    }
-
     void renameShelves(String oldName, String newName) {
-        for (ShelfEntity shelf : managedShelves(oldName)) {
+        for (ShelfEntity shelf : shelfRepository.findByName(oldName)) {
+            if (!BundledIconService.KOREADER_ICON.equals(shelf.getIcon()) || shelf.getIconType() != IconType.CUSTOM_SVG) {
+                continue;
+            }
             Long userId = shelf.getUser().getId();
             if (shelfRepository.existsByUserIdAndName(userId, newName)) {
                 log.warn("User {} already has a shelf named '{}'; leaving '{}' in place", userId, newName, oldName);
@@ -88,12 +82,6 @@ public class KoreaderShelfService {
             shelf.setName(newName);
             shelfRepository.save(shelf);
         }
-    }
-
-    private List<ShelfEntity> managedShelves(String name) {
-        return shelfRepository.findByName(name).stream()
-                .filter(shelf -> BundledIconService.KOREADER_ICON.equals(shelf.getIcon()) && shelf.getIconType() == IconType.CUSTOM_SVG)
-                .toList();
     }
 
     private boolean ensureShelf(BookLoreUserEntity user, String name) {
