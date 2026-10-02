@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
@@ -57,8 +58,10 @@ public class BundledIconService {
         if (Files.exists(target)) {
             return false;
         }
+        Path partial = iconDir.resolve(icon + SVG_EXTENSION + ".part");
         try (InputStream source = new ClassPathResource(CLASSPATH_DIR + icon + SVG_EXTENSION).getInputStream()) {
-            Files.copy(source, target);
+            Files.copy(source, partial, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(partial, target);
             return true;
         } catch (Exception e) {
             log.warn("Could not install the bundled icon '{}'", icon, e);

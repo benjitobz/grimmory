@@ -191,4 +191,23 @@ class KoreaderUserServiceTest {
         verify(koreaderUserRepository).save(saved.capture());
         assertEquals("reader@example.com-7", saved.getValue().getUsername());
     }
+
+    @Test
+    void aTakenSuffixedUsernameGetsANumberToo() {
+        externalMode(true);
+        when(actor.getEmail()).thenReturn("reader@example.com");
+        when(actor.getUsername()).thenReturn("reader@example.com");
+        when(koreaderUserRepository.findByBookLoreUserId(7L)).thenReturn(Optional.empty());
+        when(koreaderUserRepository.findByUsername("reader@example.com")).thenReturn(Optional.of(new KoreaderUserEntity()));
+        when(koreaderUserRepository.findByUsername("reader@example.com-7")).thenReturn(Optional.of(new KoreaderUserEntity()));
+        when(userRepository.findById(7L)).thenReturn(Optional.of(new BookLoreUserEntity()));
+        when(koreaderUserRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(koreaderUserMapper.toDto(any())).thenReturn(mock(KoreaderUser.class));
+
+        service.getUser();
+
+        ArgumentCaptor<KoreaderUserEntity> saved = ArgumentCaptor.forClass(KoreaderUserEntity.class);
+        verify(koreaderUserRepository).save(saved.capture());
+        assertEquals("reader@example.com-7-2", saved.getValue().getUsername());
+    }
 }

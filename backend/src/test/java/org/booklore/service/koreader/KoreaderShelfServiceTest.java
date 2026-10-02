@@ -5,6 +5,7 @@ import org.booklore.model.dto.settings.KoreaderSyncSettings;
 import org.booklore.model.entity.BookLoreUserEntity;
 import org.booklore.model.entity.ShelfEntity;
 import org.booklore.model.enums.IconType;
+import org.booklore.service.icon.BundledIconService;
 import org.booklore.repository.ShelfRepository;
 import org.booklore.repository.UserRepository;
 import org.booklore.service.appsettings.AppSettingService;
@@ -42,7 +43,8 @@ class KoreaderShelfServiceTest {
     }
 
     private static ShelfEntity shelf(BookLoreUserEntity user, String name) {
-        return ShelfEntity.builder().id(user.getId() * 100).user(user).name(name).build();
+        return ShelfEntity.builder().id(user.getId() * 100).user(user).name(name)
+                .icon(BundledIconService.KOREADER_ICON).iconType(IconType.CUSTOM_SVG).build();
     }
 
     private void currentSettings(KoreaderSyncSettings s) {
@@ -113,6 +115,19 @@ class KoreaderShelfServiceTest {
 
         verify(shelfRepository).deleteAll(shelves);
         verify(shelfRepository, never()).save(any());
+    }
+
+    @Test
+    void aShelfTheReaderMadeWithTheSameNameIsNeverRemovedOrRenamed() {
+        ShelfEntity personal = ShelfEntity.builder().id(300L).user(user(3L)).name("KOReader").icon("book").iconType(IconType.LUCIDE).build();
+        when(shelfRepository.findByName("KOReader")).thenReturn(List.of(personal));
+
+        service.onSettingsChanged(new KoreaderSyncSettingsChangedEvent(settings(true, "KOReader"), settings(false, "KOReader")));
+        service.onSettingsChanged(new KoreaderSyncSettingsChangedEvent(settings(true, "KOReader"), settings(true, "Devices")));
+
+        verify(shelfRepository).deleteAll(List.of());
+        verify(shelfRepository, never()).save(personal);
+        assertEquals("KOReader", personal.getName());
     }
 
     @Test
