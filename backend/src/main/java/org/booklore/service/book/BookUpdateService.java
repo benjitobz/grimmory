@@ -280,26 +280,14 @@ public class BookUpdateService {
     }
 
     private void validateShelfOwnership(BookLoreUserEntity user, Set<Long> shelfIdsToAssign, Set<Long> shelfIdsToUnassign) {
-        Set<Long> allowedShelfIds = user.getShelves().stream()
+        Set<Long> userShelfIds = user.getShelves().stream()
                 .map(ShelfEntity::getId)
                 .collect(Collectors.toSet());
 
-        if (user.getPermissions() != null && user.getPermissions().isPermissionAdmin()) {
-            Set<Long> foreignShelfIds = new HashSet<>(shelfIdsToAssign);
-            foreignShelfIds.addAll(shelfIdsToUnassign);
-            foreignShelfIds.removeAll(allowedShelfIds);
-            if (!foreignShelfIds.isEmpty()) {
-                shelfRepository.findAllById(foreignShelfIds).stream()
-                        .filter(ShelfEntity::isPublic)
-                        .map(ShelfEntity::getId)
-                        .forEach(allowedShelfIds::add);
-            }
-        }
-
-        if (!allowedShelfIds.containsAll(shelfIdsToAssign)) {
+        if (!userShelfIds.containsAll(shelfIdsToAssign)) {
             throw ApiError.GENERIC_UNAUTHORIZED.createException("Cannot assign shelves that do not belong to the user.");
         }
-        if (!allowedShelfIds.containsAll(shelfIdsToUnassign)) {
+        if (!userShelfIds.containsAll(shelfIdsToUnassign)) {
             throw ApiError.GENERIC_UNAUTHORIZED.createException("Cannot unassign shelves that do not belong to the user.");
         }
     }
