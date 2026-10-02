@@ -4,6 +4,7 @@ import org.booklore.config.AppProperties;
 import org.booklore.config.security.service.AuthenticationService;
 import org.booklore.model.dto.BookLoreUser;
 import org.booklore.model.dto.settings.AppSettingKey;
+import org.booklore.model.dto.settings.PublicAppSetting;
 import org.booklore.model.entity.AppSettingEntity;
 import org.booklore.model.enums.AuditAction;
 import org.booklore.repository.AppSettingsRepository;
@@ -51,6 +52,36 @@ class AppSettingServiceTest {
 
     @InjectMocks
     private AppSettingService appSettingService;
+
+    @Nested
+    class PublicSettings {
+        private PublicAppSetting publicSettingsWithKoreaderSync(String json) {
+            AppSettingEntity stored = new AppSettingEntity();
+            stored.setName(AppSettingKey.KOREADER_SYNC_SETTINGS.toString());
+            stored.setVal(json);
+            when(appSettingsRepository.findAll()).thenReturn(List.of(stored));
+            when(appProperties.getRemoteAuth()).thenReturn(new AppProperties.RemoteAuth());
+            return appSettingService.getPublicSettings();
+        }
+
+        @Test
+        void publishesTheExternalServerAndLoginEditsWhileExternalSyncIsOn() {
+            PublicAppSetting settings = publicSettingsWithKoreaderSync(
+                    "{\"externalServerEnabled\":true,\"externalServerUrl\":\" https://sync.example \",\"usersCanEditLogin\":true}");
+
+            assertThat(settings.getKoreaderSyncUrlOverride()).isEqualTo("https://sync.example");
+            assertThat(settings.isKoreaderUsersCanEditLogin()).isTrue();
+        }
+
+        @Test
+        void loginEditsAreOffWhileExternalSyncIsOff() {
+            PublicAppSetting settings = publicSettingsWithKoreaderSync(
+                    "{\"externalServerEnabled\":false,\"usersCanEditLogin\":true}");
+
+            assertThat(settings.getKoreaderSyncUrlOverride()).isNull();
+            assertThat(settings.isKoreaderUsersCanEditLogin()).isFalse();
+        }
+    }
 
     @Nested
     class UpdateSetting {

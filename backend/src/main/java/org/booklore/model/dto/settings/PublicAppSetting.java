@@ -12,4 +12,5 @@ public class PublicAppSetting {
     private OidcProviderDetails oidcProviderDetails;
     private boolean oidcForceOnlyMode;
     private String koreaderSyncUrlOverride;
+    private boolean koreaderUsersCanEditLogin;
 }

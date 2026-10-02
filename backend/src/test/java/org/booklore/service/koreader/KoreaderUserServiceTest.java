@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
@@ -40,8 +41,16 @@ class KoreaderUserServiceTest {
     @InjectMocks private KoreaderUserService service;
 
     private void externalMode(boolean enabled) {
+        externalMode(enabled, false);
+    }
+
+    private void externalMode(boolean enabled, boolean usersCanEditLogin) {
         AppSettings settings = AppSettings.builder()
-                .koreaderSyncSettings(KoreaderSyncSettings.builder().externalServerEnabled(enabled).externalServerUrl("https://sync.example").build())
+                .koreaderSyncSettings(KoreaderSyncSettings.builder()
+                        .externalServerEnabled(enabled)
+                        .externalServerUrl("https://sync.example")
+                        .usersCanEditLogin(usersCanEditLogin)
+                        .build())
                 .build();
         when(appSettingService.getAppSettings()).thenReturn(settings);
     }
@@ -50,6 +59,31 @@ class KoreaderUserServiceTest {
     void setUp() {
         lenient().when(authService.getAuthenticatedUser()).thenReturn(actor);
         lenient().when(actor.getId()).thenReturn(7L);
+    }
+
+    @Test
+    void readersCannotChangeTheirLoginInExternalModeByDefault() {
+        externalMode(true);
+        when(actor.getPermissions()).thenReturn(new BookLoreUser.UserPermissions());
+
+        assertThrows(AccessDeniedException.class, () -> service.upsertUser("reader", "newpass1"));
+        verify(koreaderUserRepository, never()).save(any());
+    }
+
+    @Test
+    void readersCanChangeTheirLoginInExternalModeWhenAllowed() {
+        externalMode(true, true);
+        when(userRepository.findById(7L)).thenReturn(Optional.of(new BookLoreUserEntity()));
+        when(koreaderUserRepository.findByBookLoreUserId(7L)).thenReturn(Optional.empty());
+        when(koreaderUserRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(koreaderUserMapper.toDto(any())).thenReturn(mock(KoreaderUser.class));
+
+        service.upsertUser("reader", "newpass1");
+
+        ArgumentCaptor<KoreaderUserEntity> saved = ArgumentCaptor.forClass(KoreaderUserEntity.class);
+        verify(koreaderUserRepository).save(saved.capture());
+        assertEquals("reader", saved.getValue().getUsername());
+        assertEquals(Md5Util.md5Hex("newpass1"), saved.getValue().getPasswordMD5());
     }
 
     @Test

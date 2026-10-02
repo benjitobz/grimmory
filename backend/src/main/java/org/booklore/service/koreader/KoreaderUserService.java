@@ -7,6 +7,7 @@ import org.booklore.exception.ApiError;
 import org.booklore.mapper.KoreaderUserMapper;
 import org.booklore.model.dto.BookLoreUser;
 import org.booklore.model.dto.KoreaderUser;
+import org.booklore.model.dto.settings.KoreaderSyncSettings;
 import org.booklore.model.entity.BookLoreUserEntity;
 import org.booklore.model.entity.KoreaderUserEntity;
 import org.booklore.repository.KoreaderUserRepository;
@@ -95,7 +96,8 @@ public class KoreaderUserService {
     @Transactional
     public KoreaderUser upsertUser(String username, String rawPassword) {
         BookLoreUser actor = authService.getAuthenticatedUser();
-        if (externalServerEnabled() && !actor.getPermissions().isAdmin()) {
+        KoreaderSyncSettings sync = appSettingService.getAppSettings().getKoreaderSyncSettings();
+        if (sync.isExternalServerEnabled() && !sync.isUsersCanEditLogin() && !actor.getPermissions().isAdmin()) {
             throw new AccessDeniedException("KOReader sync credentials are managed by the administrator");
         }
         Long ownerId = actor.getId();

@@ -326,6 +326,7 @@ public class AppSettingService {
         builder.oidcProviderDetails(details);
         KoreaderSyncSettings koreaderSync = getJsonSetting(null, settingsMap, AppSettingKey.KOREADER_SYNC_SETTINGS, KoreaderSyncSettings.class, new KoreaderSyncSettings());
         builder.koreaderSyncUrlOverride(koreaderSync == null ? null : koreaderSync.effectiveExternalServerUrl());
+        builder.koreaderUsersCanEditLogin(koreaderSync != null && koreaderSync.isExternalServerEnabled() && koreaderSync.isUsersCanEditLogin());
 
         return builder.build();
     }

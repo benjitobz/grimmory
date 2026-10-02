@@ -21,6 +21,8 @@ public class KoreaderSyncSettings {
     private String externalServerUrl = "";
     @Builder.Default @JsonSetter(nulls = Nulls.SKIP)
     private String shelfName = DEFAULT_SHELF_NAME;
+    @Builder.Default @JsonSetter(nulls = Nulls.SKIP)
+    private boolean usersCanEditLogin = false;
 
     public String effectiveExternalServerUrl() {
         if (!externalServerEnabled || externalServerUrl == null || externalServerUrl.isBlank()) {
