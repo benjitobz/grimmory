@@ -8,6 +8,7 @@ import {ToggleSwitch} from '@openng/optimus-ui/toggleswitch';
 
 import {AppSettingsService} from '../../../shared/service/app-settings.service';
 import {BookMetadataManageService} from '../../book/service/book-metadata-manage.service';
+import {ShelfService} from '../../book/service/shelf.service';
 import {AppSettingKey, CoverCroppingSettings, KoreaderSyncSettings} from '../../../shared/model/app-settings.model';
 import {InputText} from '@openng/optimus-ui/inputtext';
 import {Slider} from '@openng/optimus-ui/slider';
@@ -52,6 +53,7 @@ export class GlobalPreferencesComponent implements OnInit {
 
   private appSettingsService = inject(AppSettingsService);
   private bookMetadataManageService = inject(BookMetadataManageService);
+  private shelfService = inject(ShelfService);
   private messageService = inject(MessageService);
   private t = inject(TranslocoService);
   private destroyRef = inject(DestroyRef);
@@ -119,7 +121,7 @@ export class GlobalPreferencesComponent implements OnInit {
     }
     this.koreaderSyncSettings.externalServerUrl = url;
     this.koreaderSyncSettings.shelfName = (this.koreaderSyncSettings.shelfName ?? '').trim() || 'KOReader';
-    this.saveSetting(AppSettingKey.KOREADER_SYNC_SETTINGS, this.koreaderSyncSettings);
+    this.saveSetting(AppSettingKey.KOREADER_SYNC_SETTINGS, this.koreaderSyncSettings, () => this.shelfService.reloadShelves());
   }
 
   saveFileSize() {
@@ -141,12 +143,14 @@ export class GlobalPreferencesComponent implements OnInit {
     });
   }
 
-  private saveSetting(key: string, value: unknown): void {
+  private saveSetting(key: string, value: unknown, onSaved?: () => void): void {
     this.appSettingsService.saveSettings([{key, newValue: value}]).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
-      next: () =>
-        this.showMessage('success', this.t.translate('settingsApp.settingsSaved'), this.t.translate('settingsApp.settingsSavedDetail')),
+      next: () => {
+        onSaved?.();
+        this.showMessage('success', this.t.translate('settingsApp.settingsSaved'), this.t.translate('settingsApp.settingsSavedDetail'));
+      },
       error: () =>
         this.showMessage('error', this.t.translate('common.error'), this.t.translate('settingsApp.settingsError'))
     });
